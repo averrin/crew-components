@@ -293,6 +293,7 @@ export function filterItemPredicate(item, filter, aliases) {
 function createControlButton(data) {
   const btn = document.createElement("li");
   btn.className = "scene-control";
+  btn.style = "display: flex; align-items: center; justify-content: center";
   btn.dataset.control = data.name;
   btn.title = data.title;
   btn.innerHTML = `<iconify-icon icon=${data.icon} style="font-size: 2rem" />`;
@@ -331,6 +332,6 @@ export function addTools(data) {
         }
       );
     })
-  }, 100);
+  }, 0);
 
 }
