@@ -69,8 +69,10 @@ export function getControlledTiles() {
 
 export function hasFlag(obj, flag) {
   if (game.version < 10) {
+    if (!obj?.data?.flags) return false;
     return flag in obj.data.flags;
   } else {
+    if (!obj?.flags) return false;
     return flag in obj.flags;
   }
 }
