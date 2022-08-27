@@ -1,0 +1,32 @@
+{
+  "name": "crew-components",
+  "version": "0.1.0",
+  "description": "",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Averrin",
+  "license": "ISC",
+  "exports": {
+    "./helpers": "./helpers.js",
+    "./Tags": "./components/Tags.svelte",
+    "./Tag": "./components/Tag.svelte",
+    "./Pagenation": "./components/Pagenation.svelte",
+    "./TagSettings": "./components/TagSettings.svelte",
+    "./ArgInput": "./components/ArgInput.svelte",
+    "./tags": "./tags.js"
+  },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "consola": "^2.15.3",
+    "fast-sort": "^3.2.0",
+    "filtrex": "^3.0.0",
+    "svelte-color-picker": "^1.0.7",
+    "svelte-select": "^5.0.0-beta.14",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "svelte-range-slider-pips": "^2.0.3"
+  }
+}
