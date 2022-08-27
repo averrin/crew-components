@@ -22,7 +22,11 @@ function findString(item, str) {
 
 }
 
-const extraFunctions = { getProperty, lower: (s) => s.toLowerCase(), float: (s) => parseFloat(s || 0), int: (s) => parseInt(s || 0), findString };
+function onScene(item) {
+  return (canvas.scene.tokens.contents.filter((t) => t.actor.id == item._id) || []).length > 0;
+}
+
+const extraFunctions = { getProperty, lower: (s) => s.toLowerCase(), float: (s) => parseFloat(s || 0), int: (s) => parseInt(s || 0), findString, onScene };
 
 export let logger = consola.withTag(moduleId);
 export default function initHelpers(mid, color, settings) {
@@ -296,7 +300,7 @@ function createControlButton(data) {
   btn.style = "display: flex; align-items: center; justify-content: center";
   btn.dataset.control = data.name;
   btn.title = data.title;
-  btn.innerHTML = `<iconify-icon icon=${data.icon} style="font-size: 2rem" />`;
+  btn.innerHTML = `<iconify-icon icon=${data.icon} style="font-size: 120%" />`;
   return btn;
 }
 
