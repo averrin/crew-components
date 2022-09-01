@@ -1,7 +1,9 @@
 <script>
   import Select from "svelte-select";
+  import RemoveButton from "./RemoveButton.svelte";
 
   import { argSpecs } from "../specs.js";
+  import { get } from "svelte/store";
 
   import { rgb2hex } from "../helpers.js";
   import Tags from "./Tags.svelte";
@@ -34,6 +36,7 @@
   export let autoComplete = [];
   export let sequences = [];
   export let spec;
+  export let size = "md";
 
   const compareSigns = [
     { value: "==", label: "==" },
@@ -113,13 +116,11 @@
         ops = await spec.options(value, extra);
       }
       if (!Array.isArray(ops)) {
-        ops.update((items) => {
-          ops = items;
-          return items;
-        });
+        ops = get(ops);
       }
       options = [...ops, ...additionalItems].flat();
     }
+    logger.info(options);
   }
   populateOptions();
 
@@ -178,11 +179,22 @@
   function convertFixed(e) {
     value = { x: Number.parseFloat(value.x), y: Number.parseFloat(value.y) };
   }
+
+  let colorOpen = false;
 </script>
 
 {#if type == "color"}
-  <input type="checkbox" id="color-modal-{id}" class="ui-modal-toggle" />
-  <label for="color-modal-{id}" class="ui-modal ui-cursor-pointer">
+  <input
+    type="checkbox"
+    id="color-modal-{id}"
+    class="ui-modal-toggle"
+    on:click={(_) => (colorOpen = !colorOpen)}
+  />
+  <label
+    for="color-modal-{id}"
+    class="ui-modal ui-items-center"
+    class:modal-open={colorOpen}
+  >
     <label
       class="ui-modal-box ui-relative ui-w-fit ui-flex ui-items-center ui-justify-center ui-flex-col"
       for=""
@@ -197,13 +209,13 @@
 {/if}
 
 <label
-  class="arg-input ui-input-group ui-min-w-fit ui-input-group-xs ui-justify-{justify}"
-  class:ui-input-group-xs={compact}
+  class="arg-input ui-input-group ui-min-w-fit ui-justify-{justify} ui-input-group-{size}"
   class:ui-input-group-vertical={vertical}
   class:inline
   for=""
   class:!ui-w-auto={widthAuto}
   id="{type}-{value}"
+  data-id={id}
 >
   <slot name="left" />
   {#if label != ""}
@@ -236,14 +248,9 @@
     {/if}
 
     {#if type == "int"}
-      <input type="number" bind:value class="ui-input ui-text-base" />
+      <input type="number" bind:value class="ui-input" />
     {:else if type == "float"}
-      <input
-        type="number"
-        bind:value
-        step="0.01"
-        class="ui-input ui-text-base"
-      />
+      <input type="number" bind:value step="0.01" class="ui-input" />
     {:else if type == "effect_file"}
       <label class="ui-input-group">
         <Select
@@ -256,19 +263,7 @@
           containerStyles="border-radius: 0px !important"
         />
         <button class="ui-btn ui-btn-square" on:click={selectFile}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="ui-h-6 ui-w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            /></svg
-          >
+          <iconify-icon icon="fa6-solid:magnifying-glass" />
         </button>
       </label>
     {:else if type == "sound_file"}
@@ -277,22 +272,10 @@
           type="text"
           value={value && value.split("/")[value.split("/").length - 1]}
           on:change={(e) => (value = e.detail)}
-          class="ui-input ui-text-base"
+          class="ui-input"
         />
         <button class="ui-btn ui-btn-square" on:click={selectFile}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="ui-h-6 ui-w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            /></svg
-          >
+          <iconify-icon icon="fa6-solid:magnifying-glass" />
         </button>
       </label>
     {:else if type == "position" || type == "token" || type == "ease" || type == "targets" || type == "hook" || type == "placeable"}
@@ -311,37 +294,31 @@
             borderRadius="0rem"
           />
         </div>
-        <button class="ui-btn ui-btn-square !ui-p-[8px]" on:click={resetValue}>
-          <iconify-icon icon="gridicons:cross" />
-        </button>
+        <RemoveButton on:click={resetValue} type="primary" />
       {:else if value && typeof value === "string" && value.startsWith("#id:")}
         <input
           type="text"
           value={value.slice(4)}
           on:change={changeId}
-          class="ui-input ui-text-base"
+          class="ui-input"
         />
-        <button class="ui-btn ui-btn-square !ui-p-[8px]" on:click={resetValue}>
-          <iconify-icon icon="gridicons:cross" />
-        </button>
+        <RemoveButton on:click={resetValue} type="primary" />
       {:else if (typeof value === "object" && "x" in value && "y" in value) || type == "offset" || type == "size"}
         <input
           type="number"
           step="0.01"
           bind:value={value.x}
           on:change={convertFixed}
-          class="ui-input ui-text-base"
+          class="ui-input"
         />
         <input
           type="number"
           step="0.01"
           bind:value={value.y}
           on:change={convertFixed}
-          class="ui-input ui-text-base"
+          class="ui-input"
         />
-        <button class="ui-btn ui-btn-square !ui-p-[8px]" on:click={resetValue}>
-          <iconify-icon icon="gridicons:cross" />
-        </button>
+        <RemoveButton on:click={resetValue} type="primary" />
       {:else}
         <Select
           items={options}
@@ -360,28 +337,25 @@
         type="number"
         step="0.01"
         on:change={convertFixed}
-        class="ui-input ui-text-base"
+        class="ui-input"
       />
       <input
         type="number"
         step="0.01"
         bind:value={value.y}
         on:change={convertFixed}
-        class="ui-input ui-text-base"
+        class="ui-input"
       />
-      <button class="ui-btn ui-btn-square !ui-p-[8px]" on:click={resetValue}>
-        <iconify-icon icon="gridicons:cross" />
-      </button>
+      <RemoveButton on:click={resetValue} type="primary" />
     {:else if type == "bool"}
       <div
-        class="ui-flex ui-flex-row ui-items-center"
+        class="ui-flex ui-flex-row ui-items-center toggle-holder"
         style={!hideSign || label != "" ? "border: 1px solid #ccc;" : ""}
       >
         <input
           type="checkbox"
-          class="ui-toggle ui-toggle-accent ui-toggle-lg"
+          class="ui-toggle ui-toggle-accent"
           bind:checked={value}
-          style="border: 1px solid #ccc; border-radius: 1rem; height: 2rem !important; width: 4rem !important; --handleoffset: 2rem !important; margin-left: 1rem;"
         />
       </div>
     {:else if type == "macro"}
@@ -400,15 +374,15 @@
         listAutoWidth={false}
       />
     {:else if type == "code" || type == "expression"}
-      <input type="text" bind:value class="ui-input ui-text-base" />
+      <input type="text" bind:value class="ui-input" />
     {:else if type == "color"}
-      <label
-        for="color-modal-{id}"
+      <div
         class="ui-btn ui-btn-square"
         style:background-color={value}
+        on:click={(_) => (colorOpen = !colorOpen)}
       />
       {#if !compact}
-        <input type="text" bind:value class="ui-input ui-text-base" />
+        <input type="text" bind:value class="ui-input" />
       {/if}
     {:else if type == "effectSource"}
       <Select
@@ -433,7 +407,7 @@
           on:change={setEffectSourceArg}
           type="text"
           bind:value={value[1]}
-          class="ui-input ui-text-base"
+          class="ui-input"
         />
       {/if}
     {:else if spec.control == "select"}
@@ -480,10 +454,10 @@
         type="number"
         bind:value={value[1]}
         on:change={(_) => (value = [...value])}
-        class="ui-input ui-text-base"
+        class="ui-input"
       />
     {:else}
-      <input type="text" bind:value class="ui-input ui-text-base" />
+      <input type="text" bind:value class="ui-input" />
     {/if}
   {:else}
     <button
@@ -491,20 +465,7 @@
       style="background-color: #aa66cc;"
       on:click={(e) => setMode(e, "direct")}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="ui-h-6 ui-w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-        />
-      </svg>
+      <iconify-icon icon="heroicons-solid:hashtag" />
     </button>
     <Select
       optionIdentifier="name"
@@ -518,17 +479,16 @@
   {/if}
 
   {#if mode != "optional" && optional}
-    <button
-      class="ui-btn ui-btn-square !ui-p-[8px]"
-      on:click={resetOptionalValue}
-    >
-      <iconify-icon icon="gridicons:cross" />
-    </button>
+    <RemoveButton on:click={resetOptionalValue} type="primary" />
   {/if}
   <slot name="right" />
 </label>
 
 <style>
+  input[type="checkbox"] {
+    margin: 0;
+    border-style: solid;
+  }
   .ui-toggle:not(:checked) {
     box-shadow: calc(var(--handleoffset) * -1) 0 0 2px hsl(var(--b1)) inset,
       0 0 0 2px hsl(var(--b1)) inset;

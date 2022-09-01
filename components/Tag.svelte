@@ -33,7 +33,8 @@
   }
 
   function handleClick(event) {
-    if (event.target != this) return;
+    if (event.target != this && !event.target.classList.contains("tag-icon"))
+      return;
     event.stopPropagation();
     if (event.which == 1) {
       dispatch("click", tag);
@@ -56,7 +57,12 @@
     on:pointerdown={handleClick}
   >
     {#if tag.icon}
-      <iconify-icon icon={tag.icon} style:color={fgColor} class:compact />
+      <iconify-icon
+        icon={tag.icon}
+        style:color={fgColor}
+        class:compact
+        class="tag-icon"
+      />
     {/if}
 
     {#if !tag.icon || !compact}

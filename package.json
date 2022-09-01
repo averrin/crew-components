@@ -15,7 +15,17 @@
     "./Pagenation": "./components/Pagenation.svelte",
     "./TagSettings": "./components/TagSettings.svelte",
     "./ArgInput": "./components/ArgInput.svelte",
-    "./tags": "./tags.js"
+    "./InlineButton": "./components/InlineButton.svelte",
+    "./CopyButton": "./components/CopyButton.svelte",
+    "./IconButton": "./components/IconButton.svelte",
+    "./RemoveButton": "./components/RemoveButton.svelte",
+    "./CollapseButton": "./components/CollapseButton.svelte",
+    "./tags": "./tags.js",
+    "./specs": "./specs.js",
+    "./styles/foundry-fixes.scss": "./styles/foundry-fixes.scss",
+    "./styles/alpha-ui.scss": "./styles/alpha-ui.scss",
+    "./styles/themes.scss": "./styles/themes.scss",
+    "./styles/global.scss": "./styles/global.scss"
   },
   "dependencies": {
     "class-transformer": "^0.5.1",

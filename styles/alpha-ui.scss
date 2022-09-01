@@ -1,0 +1,284 @@
+:root {
+    --rounded-box: 1rem; /* border-radius for cards and other big elements */
+    --rounded-btn: 0.5rem; /* border-radius for buttons and similar elements */
+    --rounded-badge: 9999px; /* border-radius for badge and other small elements */
+
+    --animation-btn: 0.25s; /* bounce animation time for button */
+    --animation-input: 0.4s; /* bounce animation time for checkbox, toggle, etc */
+
+    --padding-card: 2rem; /* default card-body padding */
+
+    --btn-text-case: uppercase; /* default text case for buttons */
+    --navbar-padding: 0.5rem; /* default padding for navbar */
+    --border-btn: 1px; /* default border size for button */
+    --focus-ring: 2px; /* focus ring size for button and inputs */
+    --focus-ring-offset: 2px; /* focus ring offset size for button and inputs */
+}
+
+  .modal-open,
+  .modal-open .ui-box-modal {
+    visibility: visible !important;
+      opacity: 1 !important;
+    * {
+      pointer-events: all !important;
+    }
+  }
+
+.alpha-ui {
+  font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  line-height: 1.5;
+
+    .ui-bg-base-300 {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b3,var(--b2))/var(--tw-bg-opacity))
+    }
+
+    .bui-g-base-200 {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b2,var(--b1))/var(--tw-bg-opacity))
+    }
+
+    .ui-bg-base-content\/10 {
+        background-color: hsl(var(--bc)/.1)
+    }
+
+    .ui-bg-neutral {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--n)/var(--tw-bg-opacity))
+    }
+
+    .ui-bg-base-100, .ui-bg-base {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b1)/var(--tw-bg-opacity))
+    }
+
+    svg {
+        border-radius: 0px !important;
+    }
+
+    .ui-btn-group * {
+        margin: 0px;
+    }
+
+    .inline button,
+    .inline label {
+        border-radius: 0;
+    }
+
+    .icon-button {
+        border-radius: 8px;
+        padding: 2px;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+    .icon-button:hover {
+        border: 1px solid grey;
+    }
+
+    .force-select-width .svelte-select {
+        min-width: unset !important;
+        width: 100% !important;
+        border-radius: 0;
+        input {
+            padding: 4px !important;
+        }
+        .selected-item {
+            padding: 0px !important;
+        }
+    }
+
+    .ui-child-h-full > label,
+    .ui-child-h-full > div {
+        height: 100% !important;
+    }
+
+    .ui-btn {
+        margin: 0;
+        height:     var(--control-height) !important;
+        min-height: var(--control-height) !important;
+        iconify-icon {
+            font-size: var(--btn-font-size) !important;
+        }
+        &.ui-btn-square {
+            padding: 0px;
+            width:  var(--control-height) !important;
+            height: var(--control-height) !important;
+        }
+    }
+
+    .ui-input-group,
+    .ui-btn-group,
+    .ui-group {
+        input, .ui-btn {
+          height: 100%;
+        }
+    }
+
+    .ui-input-group-lg
+    .ui-btn-group-lg
+    .ui-group-lg,
+  .ui-btn-lg
+  {
+        --control-height: 3rem;
+        --btn-font-size: 2rem;
+        min-height: var(--control-height) !important;
+        height: var(--control-height) !important;
+    }
+    .ui-input-group-md,
+    .ui-btn-group-md,
+    .ui-group-md,
+  .ui-btn-md
+  {
+        --control-height: 2.5rem;
+        --btn-font-size: 1.5rem;
+        min-height: var(--control-height) !important;
+        height: var(--control-height) !important;
+    }
+
+    .svelte-select {
+      --border-radius: var(--rounded-btn, 0.5rem);
+    }
+
+    .ui-input-group-xs,
+    .ui-group-xs,
+    .ui-btn-group-xs,
+  .ui-btn-xs {
+        --control-height: 1.8rem;
+        --btn-font-size: 1rem;
+        min-height: var(--control-height) !important;
+        height: var(--control-height) !important;
+    }
+
+    .svelte-select {
+        --height: var(--control-height);
+        min-width: 180px;
+        width: fit-content;
+        max-width: 600px;
+        border-radius: var(--rounded-btn, 0.5rem);
+        background: #fff !important;
+
+        input,
+        .selection {
+            font-size: 0.8rem !important;
+            height: 100% !important;
+            color: var(--color-text-dark-primary) !important;
+        }
+    }
+
+    .svelte-tags-input-tag {
+        align-items: center;
+    }
+
+    .ui-tabs-boxed .ui-tab-active {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--p) / var(--tw-bg-opacity));
+        --tw-text-opacity: 1;
+        color: hsl(var(--pc) / var(--tw-text-opacity));
+        border-radius: var(--rounded-btn, 0.5rem);
+        font-weight: 600;
+    }
+
+    .ui-input-group > :where(span) {
+        display: flex;
+        align-items: center;
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+        padding-left: 1rem;
+        padding-right: 1rem;
+        white-space: nowrap;
+    }
+
+    .ui-input-group,
+    .ui-btn-group {
+        .toggle-holder:not(:first-child) .ui-toggle {
+            border: none !important;
+        }
+
+        :first-child:not(:last-child) {
+            border-top-left-radius: var(--rounded-btn, 0.5rem);
+            border-top-right-radius: 0;
+            border-bottom-left-radius: var(--rounded-btn, 0.5rem);
+            border-bottom-right-radius: 0;
+        }
+
+        :last-child:not(:first-child) {
+            border-top-left-radius: 0;
+            border-top-right-radius: var(--rounded-btn, 0.5rem);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: var(--rounded-btn, 0.5rem);
+        }
+    }
+
+    .ui-input-group > :not(:last-child):not(:first-child) {
+        border-radius: 0px;
+    }
+
+    .ui-text-base {
+        font-size: 1rem !important;
+    }
+
+    .ui-drawer {
+        height: 100%;
+    }
+
+    .ui-input {
+        padding-left: 1rem !important;
+        border-color: #ddd !important;
+    }
+
+    .ui-drawer-side ul {
+        margin: 0px;
+    }
+    .ui-tabs {
+        justify-content: center;
+    }
+    .ui-tabs-boxed {
+        padding: 0.5rem;
+        border-radius: none;
+    }
+
+    .ui-toggle {
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        width: 3rem !important;
+        height: 1.5rem !important;
+    }
+
+    .ui-checkbox {
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        height: 1.5rem !important;
+        width: 1.5rem !important;
+        border-radius: var(--rounded-btn, 0.5rem) !important;
+        border-color: lightgray;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .ui-btn.ui-loading:before {
+        border-style: solid;
+    }
+
+    .ui-input {
+        border-color: #ddd !important;
+        /* height: 3rem !important; */
+    }
+
+    .ui-btn-group:not(.ui-btn-group-vertical) > .ui-btn:not(:last-of-type) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .ui-btn-group:not(.ui-btn-group-vertical) > .ui-btn:not(:first-of-type) {
+        margin-left: -1px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .ui-btn-error {
+        --tw-border-opacity: 1;
+        border-color: hsl(var(--er) / var(--tw-border-opacity));
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--er) / var(--tw-bg-opacity));
+        --tw-text-opacity: 1;
+        color: hsl(var(--erc, var(--nc)) / var(--tw-text-opacity));
+    }
+}

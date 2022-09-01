@@ -29,16 +29,16 @@
 {#if editTag}
   <input
     type="checkbox"
-    id="color-modal-tags-{editTag.text}"
+    id="modal-tags-{editTag.text}"
     class="ui-modal-toggle"
     bind:checked={editTag}
   />
   <label
-    for="color-modal-tags-{editTag.text}"
-    class="ui-modal ui-cursor-pointer modal-open"
+    for="modal-tags-{editTag.text}"
+    class="ui-modal ui-cursor-pointer modal-open ui-items-center"
   >
     <div
-      class="ui-modal-box ui-w-11/12 ui-max-w-5xl ui-flex-col ui-gap-1 ui-flex ui-flex-col"
+      class="ui-modal-box ui-bg-base-100 ui-w-11/12 ui-max-w-5xl ui-flex-col ui-gap-1 ui-flex ui-flex-col ui-max-h-64"
     >
       <h3 class="ui-py-1 ui-font-bold ui-text-lg">Edit tag</h3>
       <div class="ui-flex ui-flex-row ui-items-center ui-gap-2">
@@ -52,6 +52,7 @@
             hideSign={true}
             widthAuto={true}
             defaultValue="#46525D"
+            size="md"
           />
           <ArgInput
             type="icon"
@@ -59,6 +60,7 @@
             bind:value={editTag.icon}
             hideSign={true}
             widthAuto={true}
+            size="md"
           />
           <!-- <ArgInput -->
           <!--   type="bool" -->
@@ -76,12 +78,11 @@
           <Tag tag={editTag} compact={true} />
         </div>
       </div>
-      <div class="ui-modal-tag">
-        <label
-          for="seq-modal"
-          class="ui-btn ui-btn-primary"
-          on:click={(_) => apply()}>Save</label
-        >
+      <div
+        class="ui-btn ui-btn-primary ui-btn-md ui-place-self-end"
+        on:click={(_) => apply()}
+      >
+        Save
       </div>
     </div>
   </label>

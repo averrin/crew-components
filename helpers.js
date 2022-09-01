@@ -23,10 +23,65 @@ function findString(item, str) {
 }
 
 function onScene(item) {
-  return (canvas.scene.tokens.contents.filter((t) => t.actor.id == item._id) || []).length > 0;
+  return (canvas.scene.tokens.contents.filter((t) => t.actor?.id == item._id) || []).length > 0;
 }
 
-const extraFunctions = { getProperty, lower: (s) => s.toLowerCase(), float: (s) => parseFloat(s || 0), int: (s) => parseInt(s || 0), findString, onScene };
+export function hasFlag(obj, flag) {
+  if (game.version < 10) {
+    if (!obj?.data?.flags) return false;
+    return flag in obj.data.flags;
+  } else {
+    if (!obj?.flags) return false;
+    return flag in obj.flags;
+  }
+}
+
+export function getFlag(obj, flag) {
+  const f = flag.split(".");
+  if (!obj) return null;
+  let doc = obj;
+  if (game.version < 10 && !("flags" in doc)) {
+    doc = obj.data;
+  }
+  if (!obj) return null;
+  if (doc && "flags" in doc) {
+    let result = doc.flags[f[0]];
+    for (const k of f.slice(1)) {
+      if (!result) return result;
+      result = result[k];
+    }
+    return result;
+  }
+  return null
+}
+
+export function setFlag(obj, flag, value) {
+  const updates = {};
+  updates[`flags.${flag}`] = value;
+  return obj.update(updates);
+}
+
+export function toggleFlag(obj, flag) {
+  if (getFlag(obj, flag)) {
+    return setFlag(obj, flag, false)
+  } else {
+    return setFlag(obj, flag, true)
+  }
+}
+
+const extraFunctions = {
+  getProperty,
+  lower: (s) => s.toLowerCase(),
+  float: (s) => parseFloat(s || 0),
+  int: (s) => parseInt(s || 0),
+  findString,
+  onScene,
+  getFlag,
+};
+const globalAliases = {
+  "@onScene": "onScene(@item)",
+  "@fav": 'getFlag(@item, "alpha-suit.fav")',
+}
 
 export let logger = consola.withTag(moduleId);
 export default function initHelpers(mid, color, settings) {
@@ -67,32 +122,6 @@ export function getControlledTiles() {
   }
 }
 
-export function hasFlag(obj, flag) {
-  if (game.version < 10) {
-    if (!obj?.data?.flags) return false;
-    return flag in obj.data.flags;
-  } else {
-    if (!obj?.flags) return false;
-    return flag in obj.flags;
-  }
-}
-
-export function getFlag(obj, flag) {
-  let doc = obj;
-  if (game.version < 10) {
-    doc = obj.data;
-  }
-  if (doc && "flags" in doc) {
-    return doc.flags[flag];
-  }
-  return null
-}
-
-export function setFlag(obj, flag, value) {
-  const updates = {};
-  updates[`flags.${flag}`] = value;
-  return obj.update(updates);
-}
 
 let _cachedIcons = {};
 export async function getIconNames(collection) {
@@ -178,6 +207,7 @@ export function pageContent(content, currentPage, pageSize) {
 
 export function createSort(aliases, field, dir, id) {
   let _field = field;
+  aliases = { ...aliases, ...globalAliases };
   _field = _field.replaceAll(fieldRegex, (f) => aliases[f] || f);
   const index = Array.from(_field.matchAll(fieldRegex))?.map((match) => match[2]) || [];
   return { field, dir, id: id || uuidv4(), index };
@@ -185,6 +215,7 @@ export function createSort(aliases, field, dir, id) {
 
 export function createShow(aliases, field) {
   let _field = field;
+  aliases = { ...aliases, ...globalAliases };
   _field = _field.replaceAll(fieldRegex, (f) => aliases[f] || f);
   const index = Array.from(_field.matchAll(fieldRegex))?.map((match) => match[2]) || [];
   return { field, index };
@@ -192,6 +223,7 @@ export function createShow(aliases, field) {
 
 export function createFilter(aliases, field, id) {
   let _field = field;
+  aliases = { ...aliases, ...globalAliases };
   _field = _field.replaceAll(fieldRegex, (f) => aliases[f] || f);
   const index = Array.from(_field.matchAll(fieldRegex))?.map((match) => match[2]) || [];
   return { field, index, id };
@@ -203,6 +235,7 @@ export function showGetter(aliases, show) {
 
 export function createGetter(aliases, field) {
   const _f = field;
+  aliases = { ...aliases, ...globalAliases };
   field = field.replaceAll(fieldRegex, (f) => aliases[f] || f);
   const getterText = preprocess(field);
   logger.info(`${_f} => ${getterText}`);
@@ -340,4 +373,25 @@ export function addTools(data) {
     })
   }, 0);
 
+}
+
+export function toggleFilter(filter, field, id, aliases = {}) {
+  filter.update(f => {
+    f.filters = f.filters || [];
+    if (f.filters.find(f => f.id == id)) {
+      f.filters = f.filters.filter(f => f.id != id);
+    } else {
+      f.filters.push(createFilter(aliases, field, id))
+    }
+    return f;
+  })
+}
+
+export function addFilter(filter, field, id, aliases = {}) {
+  filter.update(f => {
+    f.filters = f.filters || [];
+    f.filters = f.filters.filter(f => f.id != id);
+    f.filters.push(createFilter(aliases, field, id))
+    return f;
+  })
 }

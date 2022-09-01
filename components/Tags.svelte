@@ -550,17 +550,14 @@
     align-items: center;
     border: solid 1px #ccc;
     background: #fff;
-    min-height: var(--main-input-height);
+    min-height: var(--control-height);
+    height: var(--control-height);
 
     width: 100%;
-    /* border-radius: 6px; */
-    height: 42px;
 
-    height: 100%;
     align-items: stretch;
     input {
       display: flex;
-      height: unset !important;
     }
   }
 
@@ -591,7 +588,6 @@
     border-radius: 6px;
     font-weight: bold;
     padding: 0px 0.4rem;
-    height: unset !important;
     align-items: center;
   }
 
