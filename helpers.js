@@ -26,8 +26,26 @@ function onScene(item) {
   return (canvas.scene.tokens.contents.filter((t) => t.actor?.id == item._id) || []).length > 0;
 }
 
+export function updateFields(_fields, filter, extraInfo) {
+  let fields = [..._fields];
+  if (extraInfo) {
+    fields.push(...(extraInfo?.index || []));
+  }
+  let si = [];
+  si = filter.sort?.map((s) => s.index)?.flat() || [];
+  fields.push(...si);
+  si = filter.show?.map((s) => s.index)?.flat() || [];
+  fields.push(...si);
+  si = filter.filters?.map((s) => s.index)?.flat() || [];
+  fields.push(...si);
+  if (game.version >= 10) {
+    fields = fields.map(f => f.replace("data", "system"));
+  }
+  return fields;
+}
+
 export function hasFlag(obj, flag) {
-  if (game.version < 10) {
+  if (game.version >= 10) {
     if (!obj?.data?.flags) return false;
     return flag in obj.data.flags;
   } else {
@@ -233,11 +251,12 @@ export function showGetter(aliases, show) {
   return createGetter(aliases, show.field);
 }
 
-export function createGetter(aliases, field) {
+export function createGetter(aliases, field, processed = false) {
   const _f = field;
-  aliases = { ...aliases, ...globalAliases };
-  field = field.replaceAll(fieldRegex, (f) => aliases[f] || f);
-  const getterText = preprocess(field);
+  let getterText = field;
+  if (!processed) {
+    getterText = preprocess(field, aliases);
+  }
   logger.info(`${_f} => ${getterText}`);
   let getter = getterCache[getterText];
   if (!getter) {
@@ -270,12 +289,17 @@ export function sortContent(content, filter, aliases = {}) {
   return content;
 }
 
-function preprocess(str) {
-  if (str.match(fieldRegex)) {
-    str = str.replaceAll("@item", `item`);
-    return str.replaceAll(fieldRegex, `getProperty(item, "$2")`);
+function preprocess(field, aliases) {
+  aliases = { ...aliases, ...globalAliases };
+  field = field.replaceAll(fieldRegex, (f) => aliases[f] || f);
+  if (game.version >= 10) {
+    field = field.replaceAll("data", `system`);
+  }
+  if (field.match(fieldRegex)) {
+    field = field.replaceAll("@item", `item`);
+    return field.replaceAll(fieldRegex, `getProperty(item, "$2")`);
   } else {
-    return `findString(item, "${str}")`;
+    return `findString(item, "${field}")`;
   }
 }
 
@@ -312,9 +336,9 @@ export function filterItemPredicate(item, filter, aliases) {
   //   });
   // query = qtags.join(" ");
 
-  query = filter.filters.map(f => f.field).join(" and ");
+  query = filter.filters.map(f => preprocess(f.field, aliases)).join(" and ");
   try {
-    const filter = createGetter(aliases, query);
+    const filter = createGetter(aliases, query, true);
     const res = filter(item);
     if (res !== true) {
       // logger.info(item, expr, res);
@@ -323,10 +347,6 @@ export function filterItemPredicate(item, filter, aliases) {
   } catch (error) {
     return false;
   }
-  // ?.every((tag) => {
-  //   if (!item) return false;
-  //   const expr = preprocess(tag);
-  // });
 }
 
 function createControlButton(data) {

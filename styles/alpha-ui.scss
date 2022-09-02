@@ -114,11 +114,12 @@
         }
     }
 
+
     .ui-input-group-lg
     .ui-btn-group-lg
     .ui-group-lg,
-  .ui-btn-lg
-  {
+    .ui-btn-lg
+    {
         --control-height: 3rem;
         --btn-font-size: 2rem;
         min-height: var(--control-height) !important;
@@ -127,8 +128,8 @@
     .ui-input-group-md,
     .ui-btn-group-md,
     .ui-group-md,
-  .ui-btn-md
-  {
+    .ui-btn-md
+    {
         --control-height: 2.5rem;
         --btn-font-size: 1.5rem;
         min-height: var(--control-height) !important;
@@ -142,11 +143,23 @@
     .ui-input-group-xs,
     .ui-group-xs,
     .ui-btn-group-xs,
-  .ui-btn-xs {
+    .ui-btn-xs {
         --control-height: 1.8rem;
         --btn-font-size: 1rem;
         min-height: var(--control-height) !important;
         height: var(--control-height) !important;
+    }
+
+    .ui-h-fit
+    {
+        height: fit-content !important;
+        .svelte-tags-input-layout {
+            min-height: var(--control-height) !important;
+            height: fit-content !important;
+            input {
+                min-height: calc(var(--control-height) - 0.5rem) !important;
+            }
+        }
     }
 
     .svelte-select {
