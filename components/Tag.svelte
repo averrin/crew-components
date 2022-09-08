@@ -9,6 +9,9 @@
   let fgColor = contrastColor(tag.color);
   let hlColor = "#f90a0a";
 
+  const fieldRegex = new RegExp(/(@[\w.]+)/g);
+  const hashRegex = new RegExp(/{#}/g);
+
   if (!tag.color && text.includes("@")) {
     tag.color = "#7dd3fc";
     if (text.startsWith("show:")) {
@@ -21,18 +24,19 @@
     } else {
       fgColor = "#232323";
     }
-    const fieldRegex = new RegExp(/(@[\w.]+)/g);
     text = tag.text.replaceAll(
       fieldRegex,
       `<b style="color: ${hlColor}">$1</b>`
     );
   }
+  text = text.replaceAll(hashRegex, `<b style="color: ${hlColor}">{#}</b>`);
   if (!tag.color && ["and", "or"].includes(tag.text)) {
     tag.color = "#ccffdd";
     fgColor = "#232323";
   }
 
   function handleClick(event) {
+    logger.info(event);
     if (event.target != this && !event.target.classList.contains("tag-icon"))
       return;
     event.stopPropagation();
@@ -54,7 +58,7 @@
     style:color={fgColor}
     title={tag.text}
     class:compact
-    on:pointerdown={handleClick}
+    on:pointerup={handleClick}
   >
     {#if tag.icon}
       <iconify-icon

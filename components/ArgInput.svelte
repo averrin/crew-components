@@ -118,9 +118,9 @@
       if (!Array.isArray(ops)) {
         ops = get(ops);
       }
+      ops = ops || [];
       options = [...ops, ...additionalItems].flat();
     }
-    logger.info(options);
   }
   populateOptions();
 
@@ -138,7 +138,9 @@
   ) {
     mode = "variable";
   }
+
   function setMode(e, m) {
+    if (!vars || vars.length == 0) return;
     if (e.detail == 0) return;
     mode = m;
     if (mode == "variable") {
@@ -168,7 +170,7 @@
       }
     } else if ("default" in spec) {
       value = spec.default;
-    } else if (spec.control == "compare-int") {
+    } else if (spec?.control == "compare-int") {
       value = [];
     } else {
       // debugger;
@@ -194,6 +196,7 @@
     for="color-modal-{id}"
     class="ui-modal ui-items-center"
     class:modal-open={colorOpen}
+    style="pointer-events: all !important;"
   >
     <label
       class="ui-modal-box ui-relative ui-w-fit ui-flex ui-items-center ui-justify-center ui-flex-col"
@@ -224,7 +227,9 @@
   {#if mode == "optional"}
     <div
       class="ui-flex ui-flex-row ui-items-center"
-      style={!hideSign || label != "" ? "border: 1px solid #ccc;" : ""}
+      style={!hideSign || label != ""
+        ? "border: 1px solid hsl(var(--b3));"
+        : ""}
     >
       <input
         type="checkbox"
@@ -235,7 +240,7 @@
   {:else if mode == "direct"}
     {#if !hideSign}
       <button
-        class="ui-btn ui-btn-square ui-m-0 !ui-p-[10px]"
+        class="ui-btn ui-btn-square ui-border-none"
         class:ui-btn-disabled={!(variables && vars.length > 0)}
         style:background-color={variables && vars.length > 0
           ? "#316060"
@@ -346,11 +351,13 @@
         on:change={convertFixed}
         class="ui-input"
       />
-      <RemoveButton on:click={resetValue} type="primary" />
+      <!-- <RemoveButton on:click={resetValue} type="primary" /> -->
     {:else if type == "bool"}
       <div
         class="ui-flex ui-flex-row ui-items-center toggle-holder"
-        style={!hideSign || label != "" ? "border: 1px solid #ccc;" : ""}
+        style={!hideSign || label != ""
+          ? "border: 1px solid hsl(var(--b3));"
+          : ""}
       >
         <input
           type="checkbox"
@@ -410,7 +417,7 @@
           class="ui-input"
         />
       {/if}
-    {:else if spec.control == "select"}
+    {:else if spec?.control == "select"}
       <Select
         items={options}
         {value}
@@ -419,7 +426,7 @@
         on:clear={(_) => (value = "")}
         listAutoWidth={false}
       />
-    {:else if spec.control == "multiselect"}
+    {:else if spec?.control == "multiselect"}
       <div>
         <Tags
           allowPaste={false}
@@ -439,7 +446,7 @@
           borderRadius="0rem 0.5rem 0.5rem 0rem "
         />
       </div>
-    {:else if spec.control == "compare-int"}
+    {:else if spec?.control == "compare-int"}
       <div class="ui-w-16 force-select-width">
         <Select
           items={compareSigns}
@@ -461,11 +468,11 @@
     {/if}
   {:else}
     <button
-      class="ui-btn ui-btn-square ui-m-0"
+      class="ui-btn ui-btn-square ui-m-0 ui-border-none"
       style="background-color: #aa66cc;"
       on:click={(e) => setMode(e, "direct")}
     >
-      <iconify-icon icon="heroicons-solid:hashtag" />
+      <iconify-icon icon="heroicons-solid:at-symbol" />
     </button>
     <Select
       optionIdentifier="name"

@@ -1,7 +1,6 @@
 <script>
   // This is a modified version of https://github.com/agustinl/svelte-tags-input
   import { createEventDispatcher, onDestroy } from "svelte";
-  import { contrastColor } from "../helpers.js";
   import { getContext, tick } from "svelte";
   import Tag from "./Tag.svelte";
   // import { tagsStore } from "../../modules/stores.js";
@@ -100,11 +99,11 @@
           /* switch (input.keyCode) {
                 case 9:
                     // TAB add first element on the autoComplete list
-                    if (autoComplete && document.getElementById(matchsID)) {                        
+                    if (autoComplete && document.getElementById(matchsID)) {
                         addTag(document.getElementById(matchsID).querySelectorAll("li")[0].textContent);
                     } else {
                         addTag(currentTag);
-                    }                    
+                    }
                     break;
                 default:
                     addTag(currentTag);
@@ -529,6 +528,8 @@
     /* font-size: 1.2rem; */
     font-size: 0.8rem;
     padding: 2px 5px;
+    background-color: hsl(var(--b1));
+    color: hsl(var(--bc));
   }
 
   .svelte-tags-input-layout label {
@@ -548,8 +549,7 @@
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    border: solid 1px #ccc;
-    background: #fff;
+    border: solid 1px hsl(var(--b3));
     min-height: var(--control-height);
     height: var(--control-height);
 
@@ -558,6 +558,7 @@
     align-items: stretch;
     input {
       display: flex;
+      color: hsl(var(--bc));
     }
   }
 
@@ -570,7 +571,6 @@
     margin: 0;
 
     border: none;
-    background: #fff;
   }
 
   .svelte-tags-input:focus {
@@ -583,17 +583,12 @@
     display: flex;
     white-space: nowrap;
     list-style: none;
-    background: hsl(var(--n) / var(--tw-bg-opacity));
     color: #fff;
     border-radius: 6px;
     font-weight: bold;
     padding: 0px 0.4rem;
     align-items: center;
   }
-
-  /*.svelte-tags-input-tag:hover {
-    background: #CCC;
-}*/
 
   .svelte-tags-input-tag-remove {
     cursor: pointer;
@@ -613,7 +608,6 @@
     right: 0;
     margin: 3px 0;
     padding: 0px;
-    background: #fff;
     /* border: solid 1px #ccc; */
     border-radius: 2px;
     max-height: 310px;
@@ -631,15 +625,14 @@
 
   .svelte-tags-input-matchs li:hover,
   .svelte-tags-input-matchs li:focus {
-    background: #000;
-    color: #fff;
     outline: none;
+    background-color: hsl(var(--b3));
+    color: hsl(var(--bc));
   }
 
   /* svelte-tags-input disabled */
   .svelte-tags-input-layout.sti-layout-disable,
   .svelte-tags-input:disabled {
-    background: #eaeaea;
     cursor: not-allowed;
   }
 
@@ -649,7 +642,6 @@
   }
 
   .svelte-tags-input-layout.sti-layout-disable .svelte-tags-input-tag {
-    background: #aeaeae;
   }
 
   .svelte-tags-input-layout.sti-layout-disable .svelte-tags-input-tag-remove {

@@ -28,6 +28,54 @@
   font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   line-height: 1.5;
 
+  h1,h2,h3,h4 {
+    color: hsl(var(--bc));
+  }
+
+  .ui-btn-ghost:not(.ui-border),
+  .ui-btn-ghost:hover:not(.ui-border) {
+    border: none;
+  }
+
+  .ui-btn-primary:hover iconify-icon {
+    color: hsl(var(--b1) / var(--tw-text-opacity)) !important;
+  }
+  
+  .ui-btn-outline:hover iconify-icon {
+    color: hsl(var(--b1) / var(--tw-text-opacity)) !important;
+  }
+
+  .ui-btn-accent:hover {
+    color: hsl(var(--a)) !important;
+  }
+
+  .ui-btn-ghost,
+  .ui-btn-ghost:hover {
+    border-color: currentColor !important;
+    background-color: transparent !important;
+    --tw-text-opacity: 1 !important;
+    color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+  }
+
+  .ui-btn-remove {
+    background-color: hsl(var(--er) / var(--tw-bg-opacity)) !important;
+    border-color: hsl(var(--er) / var(--tw-bg-opacity)) !important;
+  }
+  .ui-btn-primary {
+    background-color: hsl(var(--n) / var(--tw-bg-opacity));
+  }
+  .ui-btn-outline {
+    border-color: hsl(var(--n) / var(--tw-bg-opacity)) !important;
+    background-color: transparent;
+    --tw-text-opacity: 1;
+    color: hsl(var(--bc) / var(--tw-text-opacity));
+  }
+
+    span, input {
+      color: hsl(var(--bc));
+      border-color: hsl(var(--b3));
+  }
+
     .ui-bg-base-300 {
         --tw-bg-opacity: 1;
         background-color: hsl(var(--b3,var(--b2))/var(--tw-bg-opacity))
@@ -85,6 +133,9 @@
         .selected-item {
             padding: 0px !important;
         }
+    }
+    .selected-item {
+            z-index: 100;
     }
 
     .ui-child-h-full > label,
@@ -168,13 +219,11 @@
         width: fit-content;
         max-width: 600px;
         border-radius: var(--rounded-btn, 0.5rem);
-        background: #fff !important;
 
         input,
         .selection {
             font-size: 0.8rem !important;
             height: 100% !important;
-            color: var(--color-text-dark-primary) !important;
         }
     }
 
@@ -234,9 +283,11 @@
         height: 100%;
     }
 
-    .ui-input {
-        padding-left: 1rem !important;
-        border-color: #ddd !important;
+    input[type="text"], input[type="number"] {
+        /* padding-left: 1rem !important; */
+        color: hsl(var(--bc)) !important;
+        border-color: hsl(var(--b1)) !important;
+        background-color: hsl(var(--b2)) !important;
     }
 
     .ui-drawer-side ul {
@@ -244,6 +295,7 @@
     }
     .ui-tabs {
         justify-content: center;
+        align-items: center;
     }
     .ui-tabs-boxed {
         padding: 0.5rem;
@@ -272,11 +324,6 @@
         border-style: solid;
     }
 
-    .ui-input {
-        border-color: #ddd !important;
-        /* height: 3rem !important; */
-    }
-
     .ui-btn-group:not(.ui-btn-group-vertical) > .ui-btn:not(:last-of-type) {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
@@ -294,4 +341,12 @@
         --tw-text-opacity: 1;
         color: hsl(var(--erc, var(--nc)) / var(--tw-text-opacity));
     }
+
+  --background: hsl(var(--b1));
+  --input-color: hsl(var(--bc));
+  --list-color: hsl(var(--bc));
+  --list-background: hsl(var(--b1));
+  --selected-item-color: hsl(var(--bc));
+  --border: 1px solid hsl(var(--b3));
+  --border-hover-color: hsl(var(--nf));
 }

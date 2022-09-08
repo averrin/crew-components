@@ -5,6 +5,7 @@
   import ArgInput from "./ArgInput.svelte";
   import Tag from "./Tag.svelte";
   import TagSpec from "../tags.js";
+  export let showGlobalSetting = false;
 
   const tagsStore = getContext("tagsStore");
 
@@ -36,11 +37,14 @@
   <label
     for="modal-tags-{editTag.text}"
     class="ui-modal ui-cursor-pointer modal-open ui-items-center"
+    style="pointer-events: all;"
   >
     <div
       class="ui-modal-box ui-bg-base-100 ui-w-11/12 ui-max-w-5xl ui-flex-col ui-gap-1 ui-flex ui-flex-col ui-max-h-64"
     >
-      <h3 class="ui-py-1 ui-font-bold ui-text-lg">Edit tag</h3>
+      <h3 class="ui-py-1 ui-font-bold ui-text-lg ui-text-base-content">
+        Edit tag
+      </h3>
       <div class="ui-flex ui-flex-row ui-items-center ui-gap-2">
         <div
           class="ui-flex ui-flex-row ui-flex-1 ui-items-center ui-gap-2 ui-flex-wrap"
@@ -62,13 +66,15 @@
             widthAuto={true}
             size="md"
           />
-          <!-- <ArgInput -->
-          <!--   type="bool" -->
-          <!--   label="global" -->
-          <!--   bind:value={editTag.global} -->
-          <!--   hideSign={true} -->
-          <!--   widthAuto={true} -->
-          <!-- /> -->
+          {#if showGlobalSetting}
+            <ArgInput
+              type="bool"
+              label="global"
+              bind:value={editTag.global}
+              hideSign={true}
+              widthAuto={true}
+            />
+          {/if}
           <!-- <ArgInput type="string" label="text" bind:value={editTag.text} hideSign={true} widthAuto={true}> -->
           <!--    <span slot="right">Text changing will create new tag</span> -->
           <!-- </ArgInput> -->

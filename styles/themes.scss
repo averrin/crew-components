@@ -15,13 +15,6 @@
     --suc: 144 100% 11%;
     --wac: 39 100% 12%;
     --erc: 6 100% 89%;
-    --animation-btn: .25s;
-    --animation-input: .2s;
-    --btn-text-case: uppercase;
-    --btn-focus-scale: .95;
-    --border-btn: 1px;
-    --tab-border: 1px;
-    --tab-radius: .5rem;
     --s: 200 13% 55%;
     --a: 13 80% 60%;
     --n: 213 14% 16%;
@@ -31,9 +24,8 @@
     --su: 144 31% 56%;
     --wa: 39 64% 60%;
     --er: 6 56% 43%;
-    --rounded-box: .25rem;
-    --rounded-btn: .125rem;
-    --rounded-badge: .125rem;
+
+--window-background: transparent;
 }
 
 [data-theme="light"] {
@@ -59,5 +51,7 @@
     --su: 196 100% 46%;
     --wa: 39 100% 50%;
     --er: 0 78% 63%;
+
+--window-background: var(--b3);
 }
 

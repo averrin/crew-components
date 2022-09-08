@@ -20,7 +20,7 @@
 </script>
 
 {#if total != 0 && total > pageSize}
-  <div class="ui-btn-group">
+  <div class="ui-btn-group ui-text-base-content">
     <button
       class="ui-btn ui-btn-square ui-btn-xs"
       on:click={(_) => setPage(-1)}
