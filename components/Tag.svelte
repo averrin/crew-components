@@ -6,8 +6,8 @@
   export let tag;
   export let compact = false;
   let text = tag.text?.toString() || "";
-  let fgColor = contrastColor(tag.color);
-  let hlColor = "#f90a0a";
+  let fgColor;
+  let hlColor = "#f94a4a";
 
   const fieldRegex = new RegExp(/(@[\w.]+)/g);
   const hashRegex = new RegExp(/{#}/g);
@@ -55,7 +55,7 @@
     on:dragstart
     on:pointerdown
     style:background-color={tag.color}
-    style:color={fgColor}
+    style:color={fgColor || contrastColor(tag.color)}
     title={tag.text}
     class:compact
     on:pointerup={handleClick}
@@ -63,7 +63,7 @@
     {#if tag.icon}
       <iconify-icon
         icon={tag.icon}
-        style:color={fgColor}
+        style:color={fgColor || contrastColor(tag.color)}
         class:compact
         class="tag-icon"
       />
@@ -76,7 +76,7 @@
       <iconify-icon
         class="ui-h-4 ui-w-4 ui-cursor-pointer tag-remove"
         icon="gridicons:cross"
-        style:color={fgColor}
+        style:color={fgColor || contrastColor(tag.color)}
         on:pointerdown={(_) => null}
         on:click={(e) => {
           e.stopPropagation();

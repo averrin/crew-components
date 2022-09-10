@@ -45,7 +45,7 @@ export function updateFields(_fields, filter, extraInfo) {
 }
 
 export function hasFlag(obj, flag) {
-  if (game.version >= 10) {
+  if (game.version < 10) {
     if (!obj?.data?.flags) return false;
     return flag in obj.data.flags;
   } else {

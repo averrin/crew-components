@@ -75,11 +75,12 @@
               widthAuto={true}
             />
           {/if}
+          <slot name="controls" />
           <!-- <ArgInput type="string" label="text" bind:value={editTag.text} hideSign={true} widthAuto={true}> -->
           <!--    <span slot="right">Text changing will create new tag</span> -->
           <!-- </ArgInput> -->
         </div>
-        <div class="ui-flex ui-flex-none ui-gap-1">
+        <div class="ui-flex ui-flex-none ui-gap-1 ui-h-8">
           <Tag tag={editTag} />
           <Tag tag={editTag} compact={true} />
         </div>

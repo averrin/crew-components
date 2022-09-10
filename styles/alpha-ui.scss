@@ -37,12 +37,21 @@
     border: none;
   }
 
-  .ui-btn-primary:hover iconify-icon {
-    color: hsl(var(--b1) / var(--tw-text-opacity)) !important;
+  .ui-btn-primary:hover
+  {
+    color: hsl(var(--n) / var(--tw-text-opacity)) !important;
+    background-color: hsl(var(--nc) / var(--tw-text-opacity)) !important;
   }
-  
-  .ui-btn-outline:hover iconify-icon {
-    color: hsl(var(--b1) / var(--tw-text-opacity)) !important;
+
+  .ui-btn-outline {
+      --tw-text-opacity: 1;
+      border-color: hsl(var(--b3) / var(--tw-text-opacity)) !important;
+      background-color: transparent !important;
+      color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+    &:hover {
+      background-color: hsl(var(--bc) / var(--tw-text-opacity)) !important;
+      color: hsl(var(--b) / var(--tw-text-opacity)) !important;
+    }
   }
 
   .ui-btn-accent:hover {
@@ -64,12 +73,6 @@
   .ui-btn-primary {
     background-color: hsl(var(--n) / var(--tw-bg-opacity));
   }
-  .ui-btn-outline {
-    border-color: hsl(var(--n) / var(--tw-bg-opacity)) !important;
-    background-color: transparent;
-    --tw-text-opacity: 1;
-    color: hsl(var(--bc) / var(--tw-text-opacity));
-  }
 
     span, input {
       color: hsl(var(--bc));
@@ -81,7 +84,7 @@
         background-color: hsl(var(--b3,var(--b2))/var(--tw-bg-opacity))
     }
 
-    .bui-g-base-200 {
+    .ui-bg-base-200 {
         --tw-bg-opacity: 1;
         background-color: hsl(var(--b2,var(--b1))/var(--tw-bg-opacity))
     }
