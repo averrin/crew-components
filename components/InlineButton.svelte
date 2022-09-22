@@ -1,6 +1,7 @@
 <script>
   export let icon;
   export let color;
+  export let title;
 </script>
 
 <iconify-icon
@@ -9,4 +10,5 @@
   style:color
   on:click
   on:pointerdown={(_) => null}
+  {title}
 />

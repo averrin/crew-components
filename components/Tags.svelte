@@ -641,9 +641,6 @@
     border-color: #ccc;
   }
 
-  .svelte-tags-input-layout.sti-layout-disable .svelte-tags-input-tag {
-  }
-
   .svelte-tags-input-layout.sti-layout-disable .svelte-tags-input-tag-remove {
     cursor: not-allowed;
   }

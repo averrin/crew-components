@@ -8,7 +8,7 @@ echo Action:
 ACTION=$1
 if [ $# -eq 0 ]
   then
-    ACTION=$(gum choose "commit" "release" "build" "dist" "dev")
+    ACTION=$(gum choose "commit" "release" "build" "dist" "dev" "archive")
 fi
 echo "Choosed: $ACTION"
 
@@ -51,6 +51,18 @@ fi
     rm -rf ./${p}-dist;
     cp -r ./${p} ./${p}-dist;
     rm -rf ./${p}-dist/node_modules
+  ;;
+  archive)
+    echo "Making release archive"
+    echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
+    act release -b -e payload.json
+    cp module.zip ../$p-$v.zip
+  ;;
+  archive-dev)
+    echo "Making release archive"
+    echo "{\"release\":{\"tag_name\":\"$v-dev\"}}" > payload.json
+    act release -b -e payload.json
+    cp module.zip ../$p-$v-dev.zip
   ;;
 esac
 echo "Done"
