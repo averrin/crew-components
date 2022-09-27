@@ -110,8 +110,9 @@ export default function initHelpers(mid, color, settings) {
   logger._reporters[0].levelColorMap[3] = infoColor;
 }
 
-export let setting = key => {
-  return game.settings.get(moduleId, key);
+export let setting = (key, val) => {
+  if (!val) return game.settings.get(moduleId, key);
+  else game.settings.set(moduleId, key, val);
 };
 
 export function rgb2hex({ r, g, b, a = 1 }) {
@@ -141,7 +142,10 @@ export function getControlledTiles() {
 }
 
 
-let _cachedIcons = {};
+import { icons as giIcons } from "@iconify-json/gi";
+import { addCollection } from 'iconify-icon';
+addCollection(giIcons);
+let _cachedIcons = { gi: Object.keys(giIcons.icons) };
 export async function getIconNames(collection) {
   if (_cachedIcons[collection]) return _cachedIcons[collection];
   const url = `https://api.iconify.design/collection?prefix=${collection}`
@@ -352,6 +356,9 @@ export function filterItemPredicate(item, filter, aliases) {
 function createControlButton(data) {
   const btn = document.createElement("li");
   btn.className = "scene-control";
+  if (data.toggle) {
+    btn.classList.add("toggle");
+  }
   btn.style = "display: flex; align-items: center; justify-content: center";
   btn.dataset.control = data.name;
   btn.title = data.title;
@@ -369,18 +376,42 @@ export function addTools(data) {
     sub.className = "sub-controls app control-tools flexcol sub-controls-" + data.name;
     for (const tool of data.tools) {
       const toolBtn = createControlButton(tool);
-      toolBtn.addEventListener("click", tool.onClick);
+      toolBtn.addEventListener("click", async (e) => {
+        await tool.onClick(e);
+        if (tool.isActive) {
+          if (tool.isActive()) {
+            toolBtn.classList.add("active");
+          } else {
+            toolBtn.classList.remove("active");
+          }
+        }
+      });
       toolBtn.dataset.tool = tool.name;
       sub.appendChild(toolBtn);
     }
     controls.appendChild(sub);
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
       const subcontrols = document.querySelectorAll(".sub-controls");
       document.querySelectorAll(".scene-control").forEach(e => e.classList.remove("active"));
       subcontrols.forEach(e => e.classList.remove("active"));
       document.querySelector(".sub-controls-" + data.name).classList.add("active");
-      ui.controls.activeControl = data.name;
+      if (game.version < 10) {
+        ui.controls.activeControl = data.name;
+      } else {
+        ui.controls._onClickLayer(e);
+      }
       btn.classList.add("active");
+      for (const tool of data.tools) {
+        const toolBtn = document.querySelector(`[data-control="${tool.name}"]`);
+        logger.info(toolBtn)
+        if (tool.isActive) {
+          if (tool.isActive()) {
+            toolBtn.classList.add("active");
+          } else {
+            toolBtn.classList.remove("active");
+          }
+        }
+      }
       Object.keys(Canvas.layers).forEach(
         l => {
           try {

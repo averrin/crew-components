@@ -28,11 +28,13 @@
     "./styles/global.scss": "./styles/global.scss"
   },
   "dependencies": {
+    "@iconify-json/gi": "averrin/iconify-game-icons",
     "class-transformer": "^0.5.1",
     "consola": "^2.15.3",
     "fast-sort": "^3.2.0",
     "filtrex": "^3.0.0",
     "svelte-color-picker": "^1.0.7",
+    "svelte-copy-to-clipboard": "^0.2.5",
     "svelte-select": "5.0.0-beta.14",
     "uuid": "^8.3.2"
   },

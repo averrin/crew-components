@@ -53,16 +53,19 @@ fi
     rm -rf ./${p}-dist/node_modules
   ;;
   archive)
-    echo "Making release archive"
+    echo "Making release archive: " $v
+    npm install --no-package-lock
     echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
     act release -b -e payload.json
     cp module.zip ../$p-$v.zip
   ;;
   archive-dev)
-    echo "Making release archive"
-    echo "{\"release\":{\"tag_name\":\"$v-dev\"}}" > payload.json
+    v=$(git semver minor --dryrun)-dev
+    echo "Making dev archive: " $v
+    npm install --no-package-lock
+    echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
     act release -b -e payload.json
-    cp module.zip ../$p-$v-dev.zip
+    cp module.zip ../$p-$v.zip
   ;;
 esac
 echo "Done"
