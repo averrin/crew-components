@@ -1,5 +1,6 @@
 <script>
   import Select from "svelte-select";
+
   import RemoveButton from "./RemoveButton.svelte";
 
   import { argSpecs } from "../specs.js";
@@ -52,6 +53,9 @@
   }
 
   spec = spec || argSpecs.find((s) => s.id == type);
+  if (!spec) {
+    logger.error("Unknown spec", label, type);
+  }
   let lastVal = value;
   function update() {
     if (lastVal == value) return;
