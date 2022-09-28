@@ -25,7 +25,7 @@
     --wa: 39 64% 60%;
     --er: 6 56% 43%;
 
---window-background: transparent;
+  --window-background: var(--b1);
 }
 
 [data-theme="light"] {
@@ -51,6 +51,6 @@
     --wa: 39 100% 50%;
     --er: 0 78% 63%;
 
---window-background: var(--b3);
+  --window-background: var(--b3);
 }
 

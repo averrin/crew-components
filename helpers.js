@@ -142,10 +142,11 @@ export function getControlledTiles() {
 }
 
 
-import { icons as giIcons } from "@iconify-json/gi";
-import { addCollection } from 'iconify-icon';
-addCollection(giIcons);
-let _cachedIcons = { gi: Object.keys(giIcons.icons) };
+// import { icons as giIcons } from "@iconify-json/gi";
+// import { addCollection } from 'iconify-icon';
+// addCollection(giIcons);
+// let _cachedIcons = { gi: Object.keys(giIcons.icons) };
+let _cachedIcons = {};
 export async function getIconNames(collection) {
   if (_cachedIcons[collection]) return _cachedIcons[collection];
   const url = `https://api.iconify.design/collection?prefix=${collection}`

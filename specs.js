@@ -1,4 +1,8 @@
 import { getIconNames } from "./helpers.js"
+export let iconCollection = "game-icons";
+export function setIconCollection(ic) {
+  iconCollection = ic;
+}
 
 export const argSpecs = [
   {
@@ -195,7 +199,6 @@ export const argSpecs = [
   {
     id: "icon", var_types: ["icon", "string", "expression"], options: async (_) => {
       // const iconCollection = setting(SETTINGS.ICON_COLLECTION);
-      const iconCollection = "gi";
       return (await getIconNames(iconCollection)).map((icon) => {
         return { "value": `${iconCollection}:${icon}`, "label": icon }; // TODO: add categories
       });
