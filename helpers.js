@@ -315,33 +315,20 @@ export function hasExpression(str) {
 export const fieldRegex = new RegExp(/(@([\w.]+))/g);
 export function filterItemPredicate(item, filter, aliases) {
   let query = "";
-  // let qtags = [];
-  // let mode = "tag";
-  if (!filter.filters || filter.filters.length == 0) return true;
-  const key = filter.filters.map(f => f.field).join(" ");
-  if (getterCache[key]) {
+  if ((!filter.filters || filter.filters.length == 0) && (!filter.persist_filters || filter.persist_filters.length == 0)) return true;
+  const key = filter?.filters?.map(f => f.field).join(" ");
+  if (key && getterCache[key]) {
     return getterCache[key](item);
   }
-  // tags
-  //   .forEach(tag => {
-  //     if (["and", "or"].includes(tag)) {
-  //       mode = "tag";
-  //       qtags.push(tag);
-  //       return;
-  //     }
-  //     if (mode == "between") {
-  //       qtags.push("and");
-  //     }
-  //     if (hasExpression(tag)) {
-  //       qtags.push(tag);
-  //     } else {
-  //       qtags.push(`lower(@name) ~= lower("${tag}")`);
-  //     }
-  //     mode = "between";
-  //   });
-  // query = qtags.join(" ");
 
-  query = filter.filters.map(f => preprocess(f.field, aliases)).join(" and ");
+  query = filter.filters?.map(f => preprocess(f.field, aliases)).join(" and ");
+  query = query ?? "";
+  if (filter.persist_filters?.length > 0) {
+    if (query != "") {
+      query += " and ";
+    }
+    query += filter.persist_filters.map(f => preprocess(f.field, aliases)).join(" and ");
+  }
   try {
     const filter = createGetter(aliases, query, true);
     const res = filter(item);
@@ -404,7 +391,6 @@ export function addTools(data) {
       btn.classList.add("active");
       for (const tool of data.tools) {
         const toolBtn = document.querySelector(`[data-control="${tool.name}"]`);
-        logger.info(toolBtn)
         if (tool.isActive) {
           if (tool.isActive()) {
             toolBtn.classList.add("active");

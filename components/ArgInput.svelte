@@ -360,7 +360,7 @@
       <div
         class="ui-flex ui-flex-row ui-items-center toggle-holder"
         style={!hideSign || label != ""
-          ? "border: 1px solid hsl(var(--b3));"
+          ? "border: 1px solid hsl(var(--b3)); padding: 0.5rem"
           : ""}
       >
         <input
