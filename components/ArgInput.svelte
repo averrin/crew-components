@@ -54,7 +54,7 @@
 
   spec = spec || argSpecs.find((s) => s.id == type);
   if (!spec) {
-    logger.error("Unknown spec", label, type);
+    logger.error("Unknown spec", label, type, argSpecs);
   }
   let lastVal = value;
   function update() {

@@ -8,7 +8,7 @@ echo Action:
 ACTION=$1
 if [ $# -eq 0 ]
   then
-    ACTION=$(gum choose "commit" "release" "build" "dist" "dev" "archive")
+    ACTION=$(gum choose "commit" "release" "build" "dist" "dev" "archive" "local-crew" "git-crew")
 fi
 echo "Choosed: $ACTION"
 
@@ -66,6 +66,12 @@ fi
     echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
     act release -b -e payload.json
     cp module.zip ../$p-$v.zip
+  ;;
+  local-crew)
+    sed -i "s/averrin\/crew-components/..\/crew-components/" package.json
+  ;;
+  git-crew)
+    sed -i "s/..\/crew-components/averrin\/crew-components/" package.json
   ;;
 esac
 echo "Done"

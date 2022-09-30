@@ -135,11 +135,11 @@
         }
         .selected-item {
           padding: 0px !important;
-          pointer-events: none;
         }
     }
     .selected-item {
             z-index: 100;
+          pointer-events: none !important;
     }
 
     .ui-child-h-full > label,
