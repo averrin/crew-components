@@ -427,7 +427,10 @@
         {value}
         {groupBy}
         on:select={(e) => (value = e.detail.value)}
-        on:clear={(_) => (value = "")}
+        on:clear={(_) => {
+          value = "";
+          dispatch("change", value);
+        }}
         listAutoWidth={false}
       />
     {:else if spec?.control == "multiselect"}

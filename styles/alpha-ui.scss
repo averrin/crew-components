@@ -32,6 +32,14 @@
     color: hsl(var(--bc));
   }
 
+  .ui-input-group > :where(span) {
+    font-weight: bold;
+  }
+
+  a.content-link, a.inline-roll {
+    background-color: #111 !important;
+  }
+
   .ui-btn-ghost:not(.ui-border),
   .ui-btn-ghost:hover:not(.ui-border) {
     border: none;
