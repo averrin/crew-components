@@ -7,6 +7,7 @@ export default class Tag {
     this.icon = undefined;
     this.global = true;
     this.version = 1;
+    this.data = undefined;
   }
 
   static fromPlain(plain) {

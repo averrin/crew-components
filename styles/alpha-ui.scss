@@ -203,6 +203,10 @@
       --border-radius: var(--rounded-btn, 0.5rem);
     }
 
+  .ui-btn-disabled {
+    color: hsl(var(--nf)) !important;
+  }
+
     .ui-input-group-xs,
     .ui-group-xs,
     .ui-btn-group-xs,

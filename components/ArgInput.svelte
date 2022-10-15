@@ -33,11 +33,18 @@
   export let compact = false;
   export let inline = false;
   export let vertical = false;
+  export let clearable = false;
 
   export let autoComplete = [];
   export let sequences = [];
   export let spec;
   export let size = "md";
+
+  export let width;
+  let style = "";
+  if (width) {
+    style = `width: ${width} !important`;
+  }
 
   const compareSigns = [
     { value: "==", label: "==" },
@@ -176,6 +183,8 @@
       value = spec.default;
     } else if (spec?.control == "compare-int") {
       value = [];
+    } else if (type == "string") {
+      value = "";
     } else {
       // debugger;
     }
@@ -223,6 +232,7 @@
   class:!ui-w-auto={widthAuto}
   id="{type}-{value}"
   data-id={id}
+  {style}
 >
   <slot name="left" />
   {#if label != ""}
@@ -472,6 +482,9 @@
       />
     {:else}
       <input type="text" bind:value class="ui-input" />
+      {#if clearable}
+        <RemoveButton on:click={resetValue} type="primary" />
+      {/if}
     {/if}
   {:else}
     <button

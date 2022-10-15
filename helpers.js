@@ -5,14 +5,19 @@ import { compileExpression } from "filtrex";
 
 let moduleId, infoColor, SETTINGS;
 
-function findString(item, str) {
+export function smartCaseFind(str, source) {
   let res = false;
   if (str == str.toLowerCase()) {
-    res = item.name.toLowerCase().match(str)
+    res = source.toLowerCase().match(str)
   } else {
-    res = item.name.match(str)
+    res = source.match(str)
   }
   res = !!res;
+  return res;
+}
+
+function findString(item, str) {
+  let res = smartCaseFind(str, item.name);
   if (!res) {
     if (item.flags && "tagger" in item.flags) {
       res = item.flags["tagger"]?.tags?.includes(str)
@@ -152,8 +157,10 @@ export async function getIconNames(collection) {
   const url = `https://api.iconify.design/collection?prefix=${collection}`
   const res = await fetch(url).then(r => r.json());
   _cachedIcons[collection] = [...res.uncategorized];
-  for (const [_, i] of Object.entries(res.categories)) {
-    _cachedIcons[collection].push(...i);
+  if (res.categories) {
+    for (const [_, i] of Object.entries(res.categories)) {
+      _cachedIcons[collection].push(...i);
+    }
   }
   return _cachedIcons[collection];
 
