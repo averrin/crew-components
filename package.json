@@ -18,6 +18,7 @@
     "./InlineButton": "./components/InlineButton.svelte",
     "./CopyButton": "./components/CopyButton.svelte",
     "./IconButton": "./components/IconButton.svelte",
+    "./Icon": "./components/Icon.svelte",
     "./RemoveButton": "./components/RemoveButton.svelte",
     "./CollapseButton": "./components/CollapseButton.svelte",
     "./tags": "./tags.js",
