@@ -2,6 +2,7 @@
   import Select from "svelte-select";
 
   import RemoveButton from "./RemoveButton.svelte";
+  import IconButton from "./IconButton.svelte";
 
   import { argSpecs } from "../specs.js";
   import { get } from "svelte/store";
@@ -16,6 +17,7 @@
 
   let mode = "direct";
 
+  export let disabled = false;
   export let id = uuidv4();
   export let value;
   export let type;
@@ -34,11 +36,13 @@
   export let inline = false;
   export let vertical = false;
   export let clearable = false;
+  export let resettable = false;
 
   export let autoComplete = [];
   export let sequences = [];
   export let spec;
   export let size = "md";
+  export let onlyAutocomplete = true;
 
   export let width;
   let style = "";
@@ -169,6 +173,10 @@
     value = "#id:" + e.target.value;
   }
   function resetValue() {
+    if (defaultValue) {
+      value = defaultValue;
+      return;
+    }
     if (spec.options) {
       let ops = spec.options;
       if (typeof spec.options === "function") {
@@ -268,8 +276,22 @@
 
     {#if type == "int"}
       <input type="number" bind:value class="ui-input" />
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else if type == "float"}
       <input type="number" bind:value step="0.01" class="ui-input" />
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else if type == "effect_file"}
       <label class="ui-input-group">
         <Select
@@ -379,6 +401,14 @@
           bind:checked={value}
         />
       </div>
+
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else if type == "macro"}
       <Select
         items={globalThis.game.macros.map((m) => {
@@ -449,7 +479,7 @@
           allowPaste={false}
           allowDrop={false}
           onlyUnique={true}
-          onlyAutocomplete={true}
+          {onlyAutocomplete}
           isClearable={true}
           splitWith={","}
           placeholder="Please select"
@@ -463,6 +493,14 @@
           borderRadius="0rem 0.5rem 0.5rem 0rem "
         />
       </div>
+
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else if spec?.control == "compare-int"}
       <div class="ui-w-16 force-select-width">
         <Select
@@ -480,10 +518,30 @@
         on:change={(_) => (value = [...value])}
         class="ui-input"
       />
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else}
-      <input type="text" bind:value class="ui-input" />
+      <input
+        type="text"
+        bind:value
+        class="ui-input"
+        {disabled}
+        class:ui-cursor-not-allowed={disabled}
+      />
       {#if clearable}
         <RemoveButton on:click={resetValue} type="primary" />
+      {/if}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
       {/if}
     {/if}
   {:else}

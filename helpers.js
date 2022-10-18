@@ -382,6 +382,7 @@ export function addTools(data) {
         }
       });
       toolBtn.dataset.tool = tool.name;
+      document.querySelectorAll(`[data-control="${tool.name}"]`).forEach((elem) => elem.remove());
       sub.appendChild(toolBtn);
     }
     controls.appendChild(sub);
