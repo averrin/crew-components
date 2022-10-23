@@ -116,8 +116,11 @@ export default function initHelpers(mid, color, settings) {
 }
 
 export let setting = (key, val) => {
-  if (!val) return game.settings.get(moduleId, key);
-  else game.settings.set(moduleId, key, val);
+  if (val === undefined) return game.settings.get(moduleId, key);
+  else {
+    // logger.info(`Writing ${moduleId}.${key} = ${JSON.stringify(val)}`);
+    game.settings.set(moduleId, key, val);
+  }
 };
 
 export function rgb2hex({ r, g, b, a = 1 }) {
@@ -440,4 +443,20 @@ export function addFilter(filter, field, id, aliases = {}) {
     f.filters.push(createFilter(aliases, field, id))
     return f;
   })
+}
+
+
+export function isImage(path) {
+  const imgExt = new FilePicker()._getExtensions("image");
+  const ext = "." + path.split(".")[path.split(".").length - 1];
+  return imgExt.includes(ext);
+}
+export function isVideo(path) {
+  return VideoHelper.hasVideoExtension(path);
+}
+
+export function showFile(file) {
+  if (isImage(file.name)) {
+    new ImagePopout(file.id, { title: file.name }).render(true);
+  }
 }

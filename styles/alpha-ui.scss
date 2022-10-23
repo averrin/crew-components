@@ -32,6 +32,12 @@
     color: hsl(var(--bc));
   }
 
+  .\!ui-h-auto {
+  .svelte-tags-input-layout, .svelte-tags-input {
+    height: auto !important;
+  }
+  }
+
   .ui-input-group > :where(span) {
     font-weight: bold;
   }

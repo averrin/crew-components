@@ -10,6 +10,7 @@
   "license": "ISC",
   "exports": {
     "./helpers": "./helpers.js",
+    "./premium": "./premium.js",
     "./Tags": "./components/Tags.svelte",
     "./Tag": "./components/Tag.svelte",
     "./Pagenation": "./components/Pagenation.svelte",

@@ -28,6 +28,7 @@
   export let selectFull = false;
   export let hideSign = true;
   export let widthAuto = true;
+  export let heightAuto = true;
   export let justify = "start";
   export let extra;
   export let optional = false;
@@ -238,6 +239,7 @@
   class:inline
   for=""
   class:!ui-w-auto={widthAuto}
+  class:!ui-h-auto={heightAuto}
   id="{type}-{value}"
   data-id={id}
   {style}
@@ -399,6 +401,7 @@
           type="checkbox"
           class="ui-toggle ui-toggle-accent"
           bind:checked={value}
+          {disabled}
         />
       </div>
 
@@ -474,7 +477,7 @@
         listAutoWidth={false}
       />
     {:else if spec?.control == "multiselect"}
-      <div>
+      <div class:!ui-h-auto={heightAuto}>
         <Tags
           allowPaste={false}
           allowDrop={false}

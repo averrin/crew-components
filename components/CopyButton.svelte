@@ -7,6 +7,10 @@
   export let title;
   export let type = "primary";
   export let size;
+
+  if (!notification) {
+    notification = `Copied: ${text}`;
+  }
 </script>
 
 <CopyToClipboard
