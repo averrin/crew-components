@@ -10,6 +10,7 @@
   "license": "ISC",
   "exports": {
     "./helpers": "./helpers.js",
+    "./stores": "./stores.js",
     "./premium": "./premium.js",
     "./Tags": "./components/Tags.svelte",
     "./Tag": "./components/Tag.svelte",
@@ -27,9 +28,12 @@
     "./styles/foundry-fixes.scss": "./styles/foundry-fixes.scss",
     "./styles/alpha-ui.scss": "./styles/alpha-ui.scss",
     "./styles/themes.scss": "./styles/themes.scss",
-    "./styles/global.scss": "./styles/global.scss"
+    "./styles/global.scss": "./styles/global.scss",
+    "./AlphaApplication": "./AlphaApplication.js",
+    "./AlphaShell": "./AlphaShell.svelte"
   },
   "dependencies": {
+    "@typhonjs-fvtt/runtime": "^0.0.19",
     "class-transformer": "^0.5.1",
     "consola": "^2.15.3",
     "fast-sort": "^3.2.0",

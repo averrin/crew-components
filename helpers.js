@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { sort } from 'fast-sort';
 import { compileExpression } from "filtrex";
 
-let moduleId, infoColor, SETTINGS;
+export let moduleId, infoColor, SETTINGS;
 
 export function smartCaseFind(str, source) {
   let res = false;

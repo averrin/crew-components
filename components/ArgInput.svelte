@@ -45,6 +45,12 @@
   export let size = "md";
   export let onlyAutocomplete = true;
 
+  if (
+    ["string", "int", "float", "offset", "position", "color"].includes(type)
+  ) {
+    heightAuto = false;
+  }
+
   export let width;
   let style = "";
   if (width) {
