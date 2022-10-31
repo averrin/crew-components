@@ -45,6 +45,10 @@
   export let size = "md";
   export let onlyAutocomplete = true;
 
+  export let min;
+  export let max;
+  export let step;
+
   if (
     ["string", "int", "float", "offset", "position", "color"].includes(type)
   ) {
@@ -302,7 +306,14 @@
         />
       {/if}
     {:else if type == "float"}
-      <input type="number" bind:value step="0.01" class="ui-input" />
+      <input
+        type="number"
+        bind:value
+        step={step ?? 0.01}
+        {min}
+        {max}
+        class="ui-input"
+      />
       {#if resettable && defaultValue !== undefined && value !== defaultValue}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
@@ -366,12 +377,18 @@
       {:else if (typeof value === "object" && "x" in value && "y" in value) || type == "offset" || type == "size"}
         <input
           type="number"
+          step={step ?? 1}
+          {min}
+          {max}
           bind:value={value.x}
           on:change={convertFixed}
           class="ui-input"
         />
         <input
           type="number"
+          step={step ?? 1}
+          {min}
+          {max}
           bind:value={value.y}
           on:change={convertFixed}
           class="ui-input"
@@ -396,13 +413,17 @@
       <input
         bind:value={value.x}
         type="number"
-        step="0.01"
+        step={step ?? 0.01}
+        {min}
+        {max}
         on:change={convertFixed}
         class="ui-input"
       />
       <input
         type="number"
-        step="0.01"
+        step={step ?? 0.01}
+        {min}
+        {max}
         bind:value={value.y}
         on:change={convertFixed}
         class="ui-input"
