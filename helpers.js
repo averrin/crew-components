@@ -113,6 +113,8 @@ export default function initHelpers(mid, color, settings) {
   infoColor = color;
   SETTINGS = settings;
   logger._reporters[0].levelColorMap[3] = infoColor;
+  logger.info("Crew components inited", mid)
+  console.log("Crew components inited", mid)
 }
 
 export let setting = (key, val) => {

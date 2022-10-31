@@ -211,6 +211,16 @@
   }
 
   let colorOpen = false;
+  $: {
+    if (type == "color" && value && typeof value !== "string") {
+      value = "#" + value.toString(16);
+      logger.info(value);
+    }
+
+    if (type == "color") {
+      logger.info(value);
+    }
+  }
 </script>
 
 {#if type == "color"}
@@ -301,8 +311,9 @@
         />
       {/if}
     {:else if type == "effect_file"}
-      <label class="ui-input-group">
+      <label class="ui-input-group" style={`--width: ${width}`}>
         <Select
+          isDisabled={disabled}
           items={spec.options(value)}
           value={value && value.split("/")[value.split("/").length - 1]}
           on:select={(e) => (value = e.detail.value)}
@@ -355,21 +366,22 @@
       {:else if (typeof value === "object" && "x" in value && "y" in value) || type == "offset" || type == "size"}
         <input
           type="number"
-          step="0.01"
           bind:value={value.x}
           on:change={convertFixed}
           class="ui-input"
         />
         <input
           type="number"
-          step="0.01"
           bind:value={value.y}
           on:change={convertFixed}
           class="ui-input"
         />
-        <RemoveButton on:click={resetValue} type="primary" />
+        {#if !disabled}
+          <RemoveButton on:click={resetValue} type="primary" />
+        {/if}
       {:else}
         <Select
+          isDisabled={disabled}
           items={options}
           {value}
           {groupBy}
@@ -420,6 +432,7 @@
       {/if}
     {:else if type == "macro"}
       <Select
+        isDisabled={disabled}
         items={globalThis.game.macros.map((m) => {
           //m.data.ref = m;
           return m.data;
@@ -446,6 +459,7 @@
       {/if}
     {:else if type == "effectSource"}
       <Select
+        isDisabled={disabled}
         items={options}
         value={options.find((o) => o.value[0] == value[0])}
         on:select={setEffectSource}
@@ -454,6 +468,7 @@
       />
       {#if value[0] == "#origin"}
         <Select
+          isDisabled={disabled}
           optionIdentifier="id"
           labelIdentifier="title"
           on:select={setEffectSourceArg}
@@ -481,6 +496,7 @@
           dispatch("change", value);
         }}
         listAutoWidth={false}
+        isDisabled={disabled}
       />
     {:else if spec?.control == "multiselect"}
       <div class:!ui-h-auto={heightAuto}>
@@ -513,6 +529,7 @@
     {:else if spec?.control == "compare-int"}
       <div class="ui-w-16 force-select-width">
         <Select
+          isDisabled={disabled}
           items={compareSigns}
           listAutoWidth={false}
           isClearable={false}
@@ -562,6 +579,7 @@
       <iconify-icon icon="heroicons-solid:at-symbol" />
     </button>
     <Select
+      isDisabled={disabled}
       optionIdentifier="name"
       labelIdentifier="name"
       items={vars}

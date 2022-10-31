@@ -368,6 +368,8 @@
   --input-color: hsl(var(--bc));
   --list-color: hsl(var(--bc));
   --list-background: hsl(var(--b1));
+  --disabled-background: hsl(var(--b3));
+  --disabled-border-color: hsl(var(--b3));
   --selected-item-color: hsl(var(--bc));
   --border: 1px solid hsl(var(--b3));
   --border-hover-color: hsl(var(--nf));

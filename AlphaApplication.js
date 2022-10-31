@@ -77,6 +77,27 @@ export default function CreateApplication(app_id, title, component, width = 800,
     _onHide() {
       globalThis.game.settings.set(moduleId, show_setting, false);
     }
+
+    makeShim() {
+      return class SettingsShim extends FormApplication {
+
+        /**
+         * @inheritDoc
+         */
+        constructor() {
+          super({});
+          AlphaSuit.showSettings(); // TODO: fix
+        }
+
+        async _updateObject(event, formData) {
+        }
+
+        render() {
+          this.close();
+        }
+
+      }
+    }
   }
 }
 
