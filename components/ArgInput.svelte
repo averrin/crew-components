@@ -11,6 +11,7 @@
   import Tags from "./Tags.svelte";
   import { HsvPicker } from "svelte-color-picker";
   import { v4 as uuidv4 } from "uuid";
+  import { tick } from "svelte";
 
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
@@ -28,7 +29,7 @@
   export let selectFull = false;
   export let hideSign = true;
   export let widthAuto = true;
-  export let heightAuto = true;
+  export let heightAuto = false;
   export let justify = "start";
   export let extra;
   export let optional = false;
@@ -49,10 +50,8 @@
   export let max;
   export let step;
 
-  if (
-    ["string", "int", "float", "offset", "position", "color"].includes(type)
-  ) {
-    heightAuto = false;
+  if (["target"].includes(type)) {
+    heightAuto = true;
   }
 
   export let width;
@@ -215,15 +214,26 @@
   }
 
   let colorOpen = false;
+
+  function fixCP() {
+    tick().then((_) => {
+      document
+        .querySelectorAll(".ui-modal-box .alpha-selector")
+        .forEach((e) => (e.style.display = "none"));
+      document
+        .querySelectorAll(".ui-modal-box .color-info-box")
+        .forEach((e) => (e.style.display = "none"));
+      document
+        .querySelectorAll(".ui-modal-box .main-container")
+        .forEach((e) => (e.style.height = "unset"));
+    });
+  }
+  fixCP();
   $: {
     if (type == "color" && value && typeof value !== "string") {
       value = "#" + value.toString(16);
-      logger.info(value);
     }
-
-    if (type == "color") {
-      logger.info(value);
-    }
+    fixCP();
   }
 </script>
 
@@ -372,6 +382,7 @@
           value={value.slice(4)}
           on:change={changeId}
           class="ui-input"
+          readonly={disabled}
         />
         <RemoveButton on:click={resetValue} type="primary" />
       {:else if (typeof value === "object" && "x" in value && "y" in value) || type == "offset" || type == "size"}
@@ -381,6 +392,7 @@
           {min}
           {max}
           bind:value={value.x}
+          readonly={disabled}
           on:change={convertFixed}
           class="ui-input"
         />
@@ -389,6 +401,7 @@
           step={step ?? 1}
           {min}
           {max}
+          readonly={disabled}
           bind:value={value.y}
           on:change={convertFixed}
           class="ui-input"
@@ -409,7 +422,7 @@
           isClearable={false}
         />
       {/if}
-    {:else if type == "offset" || type == "size"}
+    {:else if type == "offset" || type == "size" || type == "scale_xy"}
       <input
         bind:value={value.x}
         type="number"
@@ -633,5 +646,13 @@
     --tw-bg-opacity: 1;
     box-shadow: var(--handleoffset) 0 0 2px hsl(var(--b1)) inset,
       0 0 0 2px hsl(var(--b1)) inset;
+  }
+  .toggle-holder {
+    height: var(--control-height);
+  }
+
+  .alpha-selector,
+  .color-info-box {
+    display: none !important;
   }
 </style>

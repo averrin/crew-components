@@ -8,6 +8,8 @@
 
   export let elementRoot;
   export let id;
+  export let extraClass = "";
+  export let fullHeight = false;
 
   const { application } = getContext("external");
   // debugger;
@@ -48,7 +50,8 @@
 
 <ApplicationShell bind:elementRoot>
   <main
-    class="alpha-ui ui-flex ui-flex-col ui-container ui-text-base-content"
+    class={`alpha-ui ui-flex ui-flex-col ui-container ui-text-base-content ${extraClass}`}
+    style:height={fullHeight ? "100%" : "unset"}
     data-theme={$theme}
   >
     <slot />

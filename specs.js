@@ -23,6 +23,9 @@ export const argSpecs = [
     id: "size", var_types: ["offset", "size", "position", "expression"], default: { x: 0, y: 0 }
   },
   {
+    id: "scale_xy", var_types: ["offset", "size", "position", "expression"], default: { x: 1, y: 1 }
+  },
+  {
     id: "placeable", options: [
       { value: "#id:", label: "Id or Name" },
     ], var_types: ["placeable", "token", "tile", "expression"]

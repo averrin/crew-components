@@ -2,6 +2,7 @@ import consola from 'consola/src/browser'
 import { v4 as uuidv4 } from "uuid";
 import { sort } from 'fast-sort';
 import { compileExpression } from "filtrex";
+import { onDestroy } from "svelte";
 
 export let moduleId, infoColor, SETTINGS;
 
@@ -461,4 +462,9 @@ export function showFile(file) {
   if (isImage(file.name)) {
     new ImagePopout(file.id, { title: file.name }).render(true);
   }
+}
+
+export function onHook(hook, f) {
+  const id = Hooks.on(hook, f);
+  onDestroy(_ => Hooks.off(hook, id));
 }
