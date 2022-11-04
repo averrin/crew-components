@@ -30,7 +30,8 @@
     "./styles/themes.scss": "./styles/themes.scss",
     "./styles/global.scss": "./styles/global.scss",
     "./AlphaApplication": "./AlphaApplication.js",
-    "./AlphaShell": "./AlphaShell.svelte"
+    "./AlphaShell": "./AlphaShell.svelte",
+    "./TokenThumb": "./components/TokenThumb.svelte"
   },
   "dependencies": {
     "@typhonjs-fvtt/runtime": "^0.0.19",

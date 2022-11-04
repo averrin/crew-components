@@ -35,7 +35,7 @@ export default function CreateApplication(app_id, title, component, width = 800,
       });
     }
 
-    start() {
+    start(hidden = false) {
       game.settings.register(moduleId, show_setting, {
         scope: "client",
         config: false,
@@ -50,7 +50,7 @@ export default function CreateApplication(app_id, title, component, width = 800,
         default: { x: 0, y: 0 },
       });
 
-      if (setting(show_setting)) this.show();
+      if (!hidden && setting(show_setting)) this.show();
     }
 
     toggleCollapsed() {

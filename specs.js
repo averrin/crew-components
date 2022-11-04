@@ -11,7 +11,7 @@ export const argSpecs = [
       { value: "#controlled.last", label: "Last Controlled", group: "Controlled" },
       { value: "#target.first", label: "First Target", group: "Targets" },
       { value: "#target.last", label: "Last Target", group: "Targets" },
-      { value: "#manual", label: "Manual", group: "Other", lazy: true },
+      { value: "#manual", label: "Manual", group: "Other", lazy: true, restricted: true },
       { value: { x: 0, y: 0 }, label: "Fixed", group: "Other" },
       { value: [], label: "Tagger", group: "Other" },
     ], var_types: ["position", "token", "tile", "expression"], default: { x: 0, y: 0 }

@@ -12,6 +12,7 @@
   import { HsvPicker } from "svelte-color-picker";
   import { v4 as uuidv4 } from "uuid";
   import { tick } from "svelte";
+  import { getContext } from "svelte";
 
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
@@ -49,6 +50,13 @@
   export let min;
   export let max;
   export let step;
+  export let linked = false;
+  if (type == "scale_xy") {
+    linked = true;
+  }
+
+  export let isRestricted;
+  isRestricted = isRestricted || getContext("isRestricted");
 
   if (["target"].includes(type)) {
     heightAuto = true;
@@ -108,6 +116,19 @@
   }
   fixEmpty();
 
+  async function handleDrop(event) {
+    const data = TextEditor.getDragEventData(event);
+    if (data.type != "Tile") return;
+
+    let file = data.texture.src;
+    const db = Sequencer.Database.inverseFlattenedEntries.get(file);
+    if (db) {
+      file = db;
+    }
+    value = file;
+    update();
+  }
+
   function setEffectSource(e) {
     value = [e.detail.value];
     update();
@@ -145,6 +166,9 @@
       }
       ops = ops || [];
       options = [...ops, ...additionalItems].flat();
+    }
+    if (isRestricted) {
+      options = options.filter((o) => !o.restricted);
     }
   }
   populateOptions();
@@ -209,7 +233,13 @@
   }
   const groupBy = (a) => a.group;
 
-  function convertFixed(e) {
+  function convertFixed(e, key) {
+    if (key && linked) {
+      const v = value[key];
+      for (const k of Object.keys(value)) {
+        value[k] = v;
+      }
+    }
     value = { x: Number.parseFloat(value.x), y: Number.parseFloat(value.y) };
   }
 
@@ -235,6 +265,54 @@
     }
     fixCP();
   }
+
+  async function pickPosition() {
+    const controlled = [
+      canvas.tiles.controlled,
+      ...globalThis.canvas.tokens.controlled,
+    ].flat();
+    let t = await globalThis.warpgate.crosshairs.show({
+      drawIcon: true,
+      icon: "modules/director/icons/crosshair.png",
+      label: `Pick position`,
+      interval: 0,
+      // interval: setting(SETTINGS.MANUAL_MODE),
+    });
+    t = { x: t.x, y: t.y };
+    controlled.forEach((c) => c.control());
+    value = t;
+    update();
+  }
+
+  async function pickToken() {
+    const controlled = [
+      canvas.tiles.controlled,
+      ...globalThis.canvas.tokens.controlled,
+    ].flat();
+    let data = await globalThis.warpgate.crosshairs.show({
+      drawIcon: true,
+      icon: "modules/director/icons/crosshair.png",
+      label: `Pick Token`,
+      interval: 0,
+      // interval: setting(SETTINGS.MANUAL_MODE),
+    });
+    const tokens = canvas.tokens.placeables.filter(
+      (t) =>
+        t.x + t.w > data.x && t.y + t.h > data.y && t.x < data.x && t.y < data.y
+    );
+    controlled.forEach((c) => c.control());
+    if (tokens.length != 0) {
+      value = "#token:" + tokens[0].document.id;
+      update();
+    } else {
+      ui.notifications.error("Token not found");
+    }
+  }
+
+  // if (type == "token") {
+  //   // debugger;
+  //   value = "#id:" + value.id;
+  // }
 </script>
 
 {#if type == "color"}
@@ -332,7 +410,11 @@
         />
       {/if}
     {:else if type == "effect_file"}
-      <label class="ui-input-group" style={`--width: ${width}`}>
+      <label
+        class="ui-input-group"
+        style={`--width: ${width}`}
+        on:drop={handleDrop}
+      >
         <Select
           isDisabled={disabled}
           items={spec.options(value)}
@@ -385,6 +467,20 @@
           readonly={disabled}
         />
         <RemoveButton on:click={resetValue} type="primary" />
+      {:else if value && typeof value === "string" && value.startsWith("#token:")}
+        <div
+          class="ui-flex ui-flex-row ui-items-center ui-gap-2 ui-p-2"
+          style="border: 1px solid hsl(var(--b3))"
+        >
+          <img
+            class="ui-h-6 ui-w-6 ui-border-none"
+            src={canvas.tokens.get(value.slice(7))?.document.texture.src}
+            alt=""
+          />
+          {canvas.tokens.get(value.slice(7))?.document.name ?? "Unknown token"}
+        </div>
+        <IconButton icon="mdi:target" title="Pick token" on:click={pickToken} />
+        <RemoveButton on:click={resetValue} type="primary" />
       {:else if (typeof value === "object" && "x" in value && "y" in value) || type == "offset" || type == "size"}
         <input
           type="number"
@@ -406,9 +502,16 @@
           on:change={convertFixed}
           class="ui-input"
         />
+        <IconButton
+          icon="mdi:target"
+          title="Pick position"
+          on:click={pickPosition}
+        />
         {#if !disabled}
           <RemoveButton on:click={resetValue} type="primary" />
         {/if}
+      {:else if value instanceof TokenDocument}
+        {value.id}
       {:else}
         <Select
           isDisabled={disabled}
@@ -429,8 +532,8 @@
         step={step ?? 0.01}
         {min}
         {max}
-        on:change={convertFixed}
-        class="ui-input"
+        on:change={(e) => convertFixed(e, "x")}
+        class="ui-input ui-w-16"
       />
       <input
         type="number"
@@ -438,9 +541,16 @@
         {min}
         {max}
         bind:value={value.y}
-        on:change={convertFixed}
-        class="ui-input"
+        on:change={(e) => convertFixed(e, "y")}
+        class="ui-input ui-w-16"
       />
+      {#if type == "scale_xy"}
+        <IconButton
+          type={linked ? "primary" : "outline"}
+          icon={linked ? "jam:link" : "jam:unlink"}
+          on:click={(_) => (linked = !linked)}
+        />
+      {/if}
       <!-- <RemoveButton on:click={resetValue} type="primary" /> -->
     {:else if type == "bool"}
       <div

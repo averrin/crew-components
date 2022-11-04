@@ -7,6 +7,7 @@ export function settingStore(key) {
   spec.onChange = val => {
     store.set(val);
   }
+  store.subscribe(v => setting(key, v));
   return store;
 }
 
@@ -17,7 +18,7 @@ export function hookedStore(hooks, getter) {
   const store = writable(getter())
   for (const hook of hooks) {
     Hooks.on(hook, _ => {
-      logger.info("Update hooked store", hook, getter())
+      // logger.info("Update hooked store", hook, getter())
       store.set(getter())
     })
   }
