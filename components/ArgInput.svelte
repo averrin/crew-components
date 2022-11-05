@@ -362,10 +362,13 @@
 >
   <slot name="left" />
   {#if label != ""}
-    {#if icon}
-      <Icon {icon} />
-    {/if}
-    <span class="" class:ui-italic={optional}>
+    <span
+      class="ui-flex ui-flex-row ui-items-center ui-gap-1"
+      class:ui-italic={optional}
+    >
+      {#if icon}
+        <Icon {icon} />
+      {/if}
       {label}
     </span>
   {:else if icon}
