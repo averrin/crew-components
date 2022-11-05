@@ -3,6 +3,7 @@
 
   import RemoveButton from "./RemoveButton.svelte";
   import IconButton from "./IconButton.svelte";
+  import Icon from "./Icon.svelte";
 
   import { argSpecs } from "../specs.js";
   import { get } from "svelte/store";
@@ -19,6 +20,7 @@
 
   let mode = "direct";
 
+  export let icon;
   export let disabled = false;
   export let id = uuidv4();
   export let value;
@@ -170,6 +172,7 @@
     if (isRestricted) {
       options = options.filter((o) => !o.restricted);
     }
+    logger.info(type, label, spec, options);
   }
   populateOptions();
 
@@ -208,7 +211,11 @@
   }
   function resetValue() {
     if (defaultValue) {
-      value = defaultValue;
+      if (value != defaultValue) {
+        value = defaultValue;
+      } else {
+        value = "";
+      }
       return;
     }
     if (spec.options) {
@@ -350,11 +357,19 @@
   class:!ui-h-auto={heightAuto}
   id="{type}-{value}"
   data-id={id}
+  data-type={type}
   {style}
 >
   <slot name="left" />
   {#if label != ""}
-    <span class="" class:ui-italic={optional}>{label}</span>
+    {#if icon}
+      <Icon {icon} />
+    {/if}
+    <span class="" class:ui-italic={optional}>
+      {label}
+    </span>
+  {:else if icon}
+    <Icon {icon} />
   {/if}
   {#if mode == "optional"}
     <div
@@ -474,7 +489,8 @@
         >
           <img
             class="ui-h-6 ui-w-6 ui-border-none"
-            src={canvas.tokens.get(value.slice(7))?.document.texture.src}
+            src={canvas.tokens.get(value.slice(7))?.document.texture.src ??
+              "icons/svg/mystery-man.svg"}
             alt=""
           />
           {canvas.tokens.get(value.slice(7))?.document.name ?? "Unknown token"}

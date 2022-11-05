@@ -62,10 +62,13 @@ fi
   archive-dev)
     v=$(git semver minor --dryrun)-dev
     echo "Making dev archive: " $v
+    sed -i "s/\.\.\/crew-components/averrin\/crew-components/" package.json
     npm install --no-package-lock
     echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
     act release -b -e payload.json
     cp module.zip ../$p-$v.zip
+    sed -i "s/averrin\/crew-components/..\/crew-components/" package.json
+    npm i
   ;;
   local-crew)
     sed -i "s/averrin\/crew-components/..\/crew-components/" package.json

@@ -38,6 +38,7 @@ export const argSpecs = [
       { value: "#target.last", label: "Last Target" },
       { value: [], label: "Tagger" },
       { value: "#id:", label: "Id or Name" },
+      { value: "#token:", label: "Specific Token" },
     ], var_types: ["token", "expression"]
   },
   {
