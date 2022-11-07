@@ -172,7 +172,7 @@
     if (isRestricted) {
       options = options.filter((o) => !o.restricted);
     }
-    logger.info(type, label, spec, options);
+    // logger.info(type, label, spec, options, value);
   }
   populateOptions();
 
