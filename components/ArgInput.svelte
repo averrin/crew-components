@@ -151,6 +151,13 @@
     fp.browse(value);
   }
 
+  function stepUp() {
+    let parts = value.split(".");
+    parts.pop();
+    value = parts.join(".");
+    update();
+  }
+
   function colorChange(e) {
     value = rgb2hex(e.detail).hex.slice(0, 7);
   }
@@ -443,6 +450,11 @@
           listAutoWidth={false}
           containerStyles="border-radius: 0px !important"
         />
+        {#if value.split(".").length > 2}
+          <button class="ui-btn ui-btn-square" on:click={stepUp}>
+            <iconify-icon icon="charm:chevron-left" />
+          </button>
+        {/if}
         <button class="ui-btn ui-btn-square" on:click={selectFile}>
           <iconify-icon icon="fa6-solid:magnifying-glass" />
         </button>
@@ -722,15 +734,17 @@
         {disabled}
         class:ui-cursor-not-allowed={disabled}
       />
-      {#if clearable}
-        <RemoveButton on:click={resetValue} type="primary" />
-      {/if}
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
-        <IconButton
-          icon="fluent:arrow-reset-20-filled"
-          on:click={resetValue}
-          type="primary"
-        />
+      {#if !disabled}
+        {#if clearable}
+          <RemoveButton on:click={resetValue} type="primary" />
+        {/if}
+        {#if resettable && defaultValue !== undefined && value !== defaultValue}
+          <IconButton
+            icon="fluent:arrow-reset-20-filled"
+            on:click={resetValue}
+            type="primary"
+          />
+        {/if}
       {/if}
     {/if}
   {:else}
