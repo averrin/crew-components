@@ -454,6 +454,10 @@ export function isImage(path) {
   const ext = "." + path.split(".")[path.split(".").length - 1];
   return imgExt.includes(ext);
 }
+export function isSound(path) {
+  return AudioHelper.hasAudioExtension(path);
+}
+
 export function isVideo(path) {
   return VideoHelper.hasVideoExtension(path);
 }
