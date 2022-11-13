@@ -148,11 +148,11 @@ export default function initHelpers(mid, color, settings) {
   console.log("Crew components inited", mid)
 }
 
-export let setting = (key, val) => {
+export let setting = async (key, val) => {
   if (val === undefined) return game.settings.get(moduleId, key);
   else {
     // logger.info(`Writing ${moduleId}.${key} = ${JSON.stringify(val)}`);
-    game.settings.set(moduleId, key, val);
+    await game.settings.set(moduleId, key, val);
   }
 };
 
