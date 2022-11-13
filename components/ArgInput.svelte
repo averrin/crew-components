@@ -411,7 +411,7 @@
 
     {#if type == "int"}
       <input type="number" bind:value class="ui-input" />
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
           on:click={resetValue}
@@ -427,7 +427,7 @@
         {max}
         class="ui-input"
       />
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
           on:click={resetValue}
@@ -598,7 +598,7 @@
         />
       </div>
 
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
           on:click={resetValue}
@@ -694,7 +694,7 @@
         />
       </div>
 
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
           on:click={resetValue}
@@ -719,7 +719,7 @@
         on:change={(_) => (value = [...value])}
         class="ui-input"
       />
-      {#if resettable && defaultValue !== undefined && value !== defaultValue}
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
         <IconButton
           icon="fluent:arrow-reset-20-filled"
           on:click={resetValue}
@@ -738,7 +738,7 @@
         {#if clearable}
           <RemoveButton on:click={resetValue} type="primary" />
         {/if}
-        {#if resettable && defaultValue !== undefined && value !== defaultValue}
+        {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
           <IconButton
             icon="fluent:arrow-reset-20-filled"
             on:click={resetValue}

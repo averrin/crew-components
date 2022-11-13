@@ -60,6 +60,11 @@ fi
     cp module.zip ../$p-$v.zip
   ;;
   archive-dev)
+    if [ "$p" == "crew-components" ]
+    then
+      echo "You cannot create archive from $p"
+      exit 1
+    fi
     v=$(git semver minor --dryrun)-dev
     echo "Making dev archive: " $v
     sed -i "s/\.\.\/crew-components/averrin\/crew-components/" package.json

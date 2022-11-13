@@ -7,7 +7,10 @@ export function settingStore(key) {
   spec.onChange = val => {
     store.set(val);
   }
-  store.subscribe(v => setting(key, v));
+  store.subscribe(v => {
+    // logger.info("Write setting store", key, v)
+    setting(key, v);
+  });
   return store;
 }
 
@@ -30,6 +33,10 @@ export let currentScene = writable(null);
 
 export function initStores() {
   theme = settingStore("theme");
+  logger.info(get(theme));
+  if (!["dark", "light"].includes(get(theme))) {
+    setting("theme", "light");
+  }
 
   currentScene.set(canvas.scene);
   Hooks.on("canvasInit", () => {
