@@ -63,7 +63,7 @@ export function updateFields(_fields, filter, extraInfo) {
       ...Array.from(fields.map(f => f.replace("system", "data"))),
       ...Array.from(fields.map(f => f.replace("data", "system")))
     ].flat()));
-    logger.info(fields)
+    // logger.info(fields)
   }
   return fields;
 }
@@ -111,8 +111,20 @@ export function toggleFlag(obj, flag) {
   }
 }
 
+export function getItemProperty(item, prop) {
+  let val = getProperty(item, prop);
+  if (val === undefined && prop.includes("data.")) {
+    val = getProperty(item, prop.replace("data.", "system."))
+  }
+  if (val === undefined && prop.includes("system.")) {
+    val = getProperty(item, prop.replace("system.", "data."))
+  }
+  return val;
+
+}
+
 const extraFunctions = {
-  getProperty,
+  getProperty: getItemProperty,
   lower: (s) => s.toLowerCase(),
   float: (s) => parseFloat(s || 0),
   int: (s) => parseInt(s || 0),
@@ -312,7 +324,7 @@ export function sortContent(content, filter, aliases = {}) {
   let sorting = filter.sort;
   let spec = [];
   if (!sorting || sorting?.length == 0) {
-    spec.push({ asc: (item) => getProperty(item, "name") })
+    spec.push({ asc: (item) => getItemProperty(item, "name") })
   } else {
     for (const s of sorting) {
       const getter = createGetter(aliases, s.field);
@@ -332,14 +344,14 @@ function preprocess(field, aliases) {
     field = field.replaceAll("@item", `item`);
     let ret = field.replaceAll(fieldRegex, `getProperty(item, "$2")`);
 
-    if (game.version >= 10) {
-      if (ret.includes("data.")) {
-        ret = `${ret} or ${ret.replaceAll("data.", "system.")}`;
-      }
-      else if (ret.includes("system.")) {
-        ret = `${ret} or ${ret.replaceAll("system.", "data.")}`;
-      }
-    }
+    // if (game.version >= 10) {
+    //   if (ret.includes("data.")) {
+    //     ret = `(${ret} or ${ret.replaceAll("data.", "system.")})`;
+    //   }
+    //   else if (ret.includes("system.")) {
+    //     ret = `(${ret} or ${ret.replaceAll("system.", "data.")})`;
+    //   }
+    // }
     return ret;
   } else {
     return `findString(item, "${field}")`;
