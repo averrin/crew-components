@@ -3,8 +3,22 @@ import { v4 as uuidv4 } from "uuid";
 import { sort } from 'fast-sort';
 import { compileExpression } from "filtrex";
 import { onDestroy } from "svelte";
+import Fuse from 'fuse.js'
 
 export let moduleId, infoColor, SETTINGS;
+
+export function fuzzyFindInList(str, source, keys) {
+  const options = {
+    includeScore: true,
+    minMatchCharLength: 3,
+    keys,
+    threshold: 0.4,
+  }
+
+  const fuse = new Fuse(source, options)
+
+  return fuse.search(str)
+}
 
 export function smartCaseFind(str, source) {
   let res = false;
@@ -45,7 +59,11 @@ export function updateFields(_fields, filter, extraInfo) {
   si = filter.filters?.map((s) => s.index)?.flat() || [];
   fields.push(...si);
   if (game.version >= 10) {
-    fields = fields.map(f => f.replace("data", "system"));
+    fields = Array.from(new Set([
+      ...Array.from(fields.map(f => f.replace("system", "data"))),
+      ...Array.from(fields.map(f => f.replace("data", "system")))
+    ].flat()));
+    logger.info(fields)
   }
   return fields;
 }
@@ -310,12 +328,19 @@ export function sortContent(content, filter, aliases = {}) {
 function preprocess(field, aliases) {
   aliases = { ...aliases, ...globalAliases };
   field = field.replaceAll(fieldRegex, (f) => aliases[f] || f);
-  if (game.version >= 10) {
-    field = field.replaceAll("data", `system`);
-  }
   if (field.match(fieldRegex)) {
     field = field.replaceAll("@item", `item`);
-    return field.replaceAll(fieldRegex, `getProperty(item, "$2")`);
+    let ret = field.replaceAll(fieldRegex, `getProperty(item, "$2")`);
+
+    if (game.version >= 10) {
+      if (ret.includes("data.")) {
+        ret = `${ret} or ${ret.replaceAll("data.", "system.")}`;
+      }
+      else if (ret.includes("system.")) {
+        ret = `${ret} or ${ret.replaceAll("system.", "data.")}`;
+      }
+    }
+    return ret;
   } else {
     return `findString(item, "${field}")`;
   }
@@ -471,4 +496,16 @@ export function showFile(file) {
 export function onHook(hook, f) {
   const id = Hooks.on(hook, f);
   onDestroy(_ => Hooks.off(hook, id));
+}
+
+export function formatBytes(bytes, decimals = 2) {
+  if (!+bytes) return "0 Bytes";
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
