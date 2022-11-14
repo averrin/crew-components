@@ -24,6 +24,12 @@
     }
   }
 
+.toaster .message {
+    background: unset !important;
+    box-shadow: unset !important;
+    text-shadow: unset !important;
+  }
+
 .alpha-ui {
   font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   line-height: 1.5;
@@ -38,6 +44,8 @@
   .jlnk__entity-link {
     color: #232323;
   }
+
+  
 
   h1,h2,h3,h4 {
     color: hsl(var(--bc));

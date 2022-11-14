@@ -327,6 +327,14 @@
   //   // debugger;
   //   value = "#id:" + value.id;
   // }
+  setTimeout(_ => {
+
+    let tagArr = document.querySelectorAll(`#${type}-${value} input`);
+    logger.info(tagArr)
+    for (let i = 0; i < tagArr.length; i++) {
+      tagArr[i].autocomplete = "off";
+    }
+  }, 50)
 </script>
 
 {#if type == "color"}
