@@ -1,9 +1,9 @@
 <svelte:options accessors={true} />
 
 <script>
-  import { theme } from "./stores.js";
+  import { theme, scale as uiScale } from "./stores.js";
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
-  import { getContext, onDestroy } from "svelte";
+  import { getContext, onDestroy, tick } from "svelte";
   import { setting } from "./helpers.js";
 
   export let elementRoot;
@@ -21,13 +21,19 @@
     }
   }
   const position = application.position;
-  const { left, top } = position.stores;
+  const { left, top, scale } = position.stores;
 
   const key = "position-" + id;
 
   const pos = setting(key);
   left.set(pos.x);
   top.set(pos.y);
+
+  onDestroy(
+    uiScale.subscribe((s) => {
+      tick().then(_ => scale.set(s))
+    })
+  );
 
   onDestroy(
     left.subscribe((l) => {

@@ -29,9 +29,11 @@ export function hookedStore(hooks, getter) {
 }
 
 export let theme = writable("light");
+export let scale = writable(1.0);
 export let currentScene = writable(null);
 
 export function initStores() {
+  scale = settingStore("ui-scale");
   theme = settingStore("theme");
   logger.info(get(theme));
   if (!["dark", "light"].includes(get(theme))) {
