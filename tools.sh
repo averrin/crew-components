@@ -14,6 +14,7 @@ echo "Choosed: $ACTION"
 
 case $ACTION in
   dev)
+    rm -rf ./.vite-cache/
     npm run dev;;
   build)
     echo "Building..."
