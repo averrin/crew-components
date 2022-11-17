@@ -31,7 +31,7 @@
 
   onDestroy(
     uiScale.subscribe((s) => {
-      tick().then(_ => scale.set(s))
+      tick().then((_) => scale.set(s));
     })
   );
 

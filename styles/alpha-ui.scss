@@ -45,6 +45,13 @@
     color: #232323;
   }
 
+   .zoom-container {
+      transition: 0.4s ease;
+   }
+   .zoom-container:hover {
+      transform: scale(1.4);
+      z-index: 1000;
+   }
   
 
   h1,h2,h3,h4 {

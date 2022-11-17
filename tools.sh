@@ -78,9 +78,11 @@ fi
   ;;
   local-crew)
     sed -i "s/averrin\/crew-components/..\/crew-components/" package.json
+    sed -i "s/averrin\/svelte-grid/..\/svelte-grid/" package.json
   ;;
   git-crew)
     sed -i "s/\.\.\/crew-components/averrin\/crew-components/" package.json
+    sed -i "s/\.\.\/svelte-grid/averrin\/svelte-grid/" package.json
   ;;
 esac
 echo "Done"
