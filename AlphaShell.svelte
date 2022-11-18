@@ -25,9 +25,11 @@
 
   const key = "position-" + id;
 
-  const pos = setting(key);
-  left.set(pos.x);
-  top.set(pos.y);
+  tick().then((_) => {
+    const pos = setting(key);
+    left.set(pos.x);
+    top.set(pos.y);
+  });
 
   onDestroy(
     uiScale.subscribe((s) => {
@@ -38,18 +40,22 @@
   onDestroy(
     left.subscribe((l) => {
       if (!l) return;
-      const pos = setting(key);
-      pos.x = l;
-      setting(key, { x: l, y: pos.y });
+      tick().then((_) => {
+        const pos = setting(key);
+        pos.x = l;
+        setting(key, { x: l, y: pos.y });
+      });
     })
   );
 
   onDestroy(
     top.subscribe((t) => {
       if (!t) return;
-      const pos = setting(key);
-      pos.y = t;
-      setting(key, { y: t, x: pos.x });
+      tick().then((_) => {
+        const pos = setting(key);
+        pos.y = t;
+        setting(key, { y: t, x: pos.x });
+      });
     })
   );
 </script>

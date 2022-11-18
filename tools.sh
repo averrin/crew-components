@@ -69,6 +69,7 @@ fi
     v=$(git semver minor --dryrun)-dev
     echo "Making dev archive: " $v
     sed -i "s/\.\.\/crew-components/averrin\/crew-components/" package.json
+    sed -i "s/\.\.\/svelte-grid/averrin\/svelte-grid/" package.json
     npm install --no-package-lock
     echo "{\"release\":{\"tag_name\":\"$v\"}}" > payload.json
     act release -b -e payload.json

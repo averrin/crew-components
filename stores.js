@@ -14,6 +14,12 @@ export function settingStore(key) {
   return store;
 }
 
+export function userSettingStore(key, options) {
+  key = `${key}.${game.userId}`;
+  game.settings.register(moduleId, key, options);
+  return settingStore(key)
+}
+
 export function hookedStore(hooks, getter) {
   if (!Array.isArray(hooks)) {
     hooks = [hooks];

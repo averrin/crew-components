@@ -139,6 +139,7 @@ const globalAliases = {
 
 export let logger = consola.withTag(moduleId);
 export default function initHelpers(mid, color, settings) {
+  // debugger
   moduleId = mid;
   logger = consola.withTag(moduleId);
   infoColor = color;
