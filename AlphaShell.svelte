@@ -13,13 +13,13 @@
 
   const { application } = getContext("external");
   // debugger;
-  $: {
+  setTimeout(_ => {
     if (elementRoot) {
       elementRoot.classList.add("alpha-ui");
       elementRoot.classList.add("alpha-" + id);
       elementRoot.dataset["theme"] = $theme;
     }
-  }
+  }, 1);
   const position = application.position;
   const { left, top, scale } = position.stores;
 
