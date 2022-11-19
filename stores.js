@@ -14,10 +14,12 @@ export function settingStore(key) {
   return store;
 }
 
-export function userSettingStore(key, options) {
-  key = `${key}.${game.userId}`;
-  game.settings.register(moduleId, key, options);
-  return settingStore(key)
+export function userFlagStore(key, defaultValue) {
+  const store = writable(game.user.getFlag(moduleId,key) ?? defaultValue)
+  store.subscribe(v => {
+    game.user.setFlag(moduleId, key, v)
+  });
+  return store;
 }
 
 export function hookedStore(hooks, getter) {

@@ -1,9 +1,10 @@
 import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
 import { logger, setting, capitalize, moduleId } from "./helpers.js";
 
-export default function CreateApplication(app_id, title, component, width = 800, height = 600) {
+export default function CreateApplication(app_id, title, component, width = 800, height = 600, temp = false) {
   const appName = capitalize(app_id);
   const show_setting = `show-${app_id}`;
+  const isTemp = temp;
   return class AlphaApplication extends SvelteApplication {
 
     constructor() {
@@ -36,21 +37,23 @@ export default function CreateApplication(app_id, title, component, width = 800,
     }
 
     start(hidden = false) {
-      game.settings.register(moduleId, show_setting, {
-        scope: "client",
-        config: false,
-        type: Boolean,
-        default: false,
-      });
+      if (!isTemp) {
+        game.settings.register(moduleId, show_setting, {
+          scope: "client",
+          config: false,
+          type: Boolean,
+          default: false,
+        });
 
-      game.settings.register(moduleId, `position-${app_id}`, {
-        scope: "client",
-        config: false,
-        type: Object,
-        default: { x: 0, y: 0 },
-      });
+        game.settings.register(moduleId, `position-${app_id}`, {
+          scope: "client",
+          config: false,
+          type: Object,
+          default: { x: 0, y: 0 },
+        });
 
-      if (!hidden && setting(show_setting)) this.show();
+        if (!hidden && setting(show_setting)) this.show();
+      }
     }
 
     toggleCollapsed() {
@@ -67,7 +70,9 @@ export default function CreateApplication(app_id, title, component, width = 800,
 
     async show() {
       await this.render(true);
-      globalThis.game.settings.set(moduleId, show_setting, true);
+      if (!isTemp) {
+        globalThis.game.settings.set(moduleId, show_setting, true);
+      }
     }
     async hide() {
       await this.close(true);
@@ -75,7 +80,9 @@ export default function CreateApplication(app_id, title, component, width = 800,
     }
 
     _onHide() {
-      globalThis.game.settings.set(moduleId, show_setting, false);
+      if (!isTemp) {
+        globalThis.game.settings.set(moduleId, show_setting, false);
+      }
     }
 
     makeShim() {
