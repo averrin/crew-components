@@ -1,10 +1,10 @@
 <svelte:options accessors={true} />
 
 <script>
-  import { theme, scale as uiScale } from "./stores.js";
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
   import { getContext, onDestroy, tick } from "svelte";
-  import { setting } from "./helpers.js";
+  import { setting, moduleId } from "./helpers.js";
+  import {theme, scale as uiScale} from "./stores.js"
 
   export let elementRoot;
   export let id;
@@ -12,17 +12,23 @@
   export let fullHeight = false;
   export let temp = false;
 
+  logger.error($moduleId, $theme, $uiScale);
+
   const { application } = getContext("external");
   // debugger;
-  setTimeout((_) => {
-    if (elementRoot) {
-      elementRoot.classList.add("alpha-ui");
-      elementRoot.classList.add("alpha-" + id);
-      elementRoot.dataset["theme"] = $theme;
+  tick().then((_) => {
+    const element = document.getElementById("alpha-" + id)
+    if (element) {
+      element.classList.add("alpha-ui");
+      element.classList.add("alpha-" + id);
+      element.dataset["theme"] = $theme;
+    } else {
+      debugger;
     }
-  }, 1);
+  });
   const position = application.position;
   const { left, top, scale } = position.stores;
+
 
   const key = "position-" + id;
 
@@ -36,10 +42,7 @@
     onDestroy(
       uiScale.subscribe((s) => {
         tick().then((_) => scale.set(s));
-      })
-    );
-
-    onDestroy(
+      }),
       left.subscribe((l) => {
         if (!l) return;
         tick().then((_) => {
@@ -47,10 +50,7 @@
           pos.x = l;
           setting(key, { x: l, y: pos.y });
         });
-      })
-    );
-
-    onDestroy(
+      }),
       top.subscribe((t) => {
         if (!t) return;
         tick().then((_) => {

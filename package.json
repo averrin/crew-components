@@ -12,7 +12,7 @@
     "./helpers": "./helpers.js",
     "./stores": "./stores.js",
     "./premium": "./premium.js",
-    "./Tags": "./components/Tags.svelte",
+    "./Tags": "./components/TagsComponent.svelte",
     "./Tag": "./components/Tag.svelte",
     "./Pagenation": "./components/Pagenation.svelte",
     "./TagSettings": "./components/TagSettings.svelte",
@@ -23,7 +23,7 @@
     "./Icon": "./components/Icon.svelte",
     "./RemoveButton": "./components/RemoveButton.svelte",
     "./CollapseButton": "./components/CollapseButton.svelte",
-    "./tags": "./tags.js",
+    "./tagsLogic": "./tags.js",
     "./specs": "./specs.js",
     "./styles/foundry-fixes.scss": "./styles/foundry-fixes.scss",
     "./styles/alpha-ui.scss": "./styles/alpha-ui.scss",
@@ -34,7 +34,7 @@
     "./TokenThumb": "./components/TokenThumb.svelte"
   },
   "dependencies": {
-    "@typhonjs-fvtt/runtime": "^0.0.19",
+    "@typhonjs-fvtt/runtime": "^0.0.21",
     "class-transformer": "^0.5.1",
     "consola": "^2.15.3",
     "fast-sort": "^3.2.0",

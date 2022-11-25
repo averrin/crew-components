@@ -4,8 +4,10 @@ import { sort } from 'fast-sort';
 import { compileExpression } from "filtrex";
 import { onDestroy } from "svelte";
 import Fuse from 'fuse.js'
+import {writable, get} from "svelte/store"
 
 export let moduleId, infoColor, SETTINGS;
+moduleId = writable()
 
 export function fuzzyFindInList(str, source, keys) {
   const options = {
@@ -137,23 +139,32 @@ const globalAliases = {
   "@fav": 'getFlag(@item, "alpha-suit.fav")',
 }
 
-export let logger = consola.withTag(moduleId);
+export let logger = consola.withTag(get(moduleId));
 export default function initHelpers(mid, color, settings) {
   // debugger
-  moduleId = mid;
-  logger = consola.withTag(moduleId);
+  setModuleId(mid)
+  logger = consola.withTag(get(moduleId));
   infoColor = color;
   SETTINGS = settings;
   logger._reporters[0].levelColorMap[3] = infoColor;
-  logger.info("Crew components inited", mid)
-  console.log("Crew components inited", mid)
+  logger.info("Crew components inited", get(moduleId))
+  console.log("Crew components inited", get(moduleId))
 }
 
-export let setting = (key, val) => {
-  if (val === undefined) return game.settings.get(moduleId, key);
-  else {
-    // logger.info(`Writing ${moduleId}.${key} = ${JSON.stringify(val)}`);
-    game.settings.set(moduleId, key, val);
+export function setModuleId(mid) {
+  moduleId.set(mid);
+  if (!get(moduleId)) debugger;
+}
+
+export function setting(key, val) {
+  const mid = get(moduleId)
+  if (val === undefined) {
+    val = game.settings.get(mid, key)
+    // logger.info(`Reading ${mid}.${key} = ${JSON.stringify(val)}`);
+    return val;
+  } else {
+    // logger.info(`Writing ${mid}.${key} = ${JSON.stringify(val)}`);
+    game.settings.set(mid, key, val);
   }
 };
 
@@ -521,4 +532,78 @@ export function formatBytes(bytes, decimals = 2) {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+export function calculateValue(val, type) {
+  if (typeof val === 'string' || val instanceof String) {
+    if (val === "#manual") {
+      logger.warn("#manual can be handled only by async version of calculateValue");
+      return val;
+    } else if (val.startsWith("#controlled")) {
+      let ret = globalThis.canvas.tokens.controlled;
+      ret = [getControlledTiles(), ...ret].flat();
+      if (ret.length == 0) {
+        throw new Error("Nothing is selected.");
+      }
+      if (val.endsWith(".first")) {
+        return ret[0];
+      } else if (val.endsWith(".last")) {
+        return ret[ret.length - 1];
+      } else if (val.endsWith(".random")) {
+        return globalThis.Sequencer.Helpers.random_array_element(ret);
+      } else {
+        return ret;
+      }
+    } else if (val.startsWith("#target")) {
+      const ret = Array.from(globalThis.game.user.targets);
+      if (ret.length == 0) {
+        throw new Error("Nothing is targeted.");
+      }
+      if (val.endsWith(".first")) {
+        return ret[0];
+      } else if (val.endsWith(".last")) {
+        return ret[ret.length - 1];
+      } else if (val.endsWith(".random")) {
+        return globalThis.Sequencer.Helpers.random_array_element(ret);
+      } else {
+        return ret;
+      }
+    } else if (val.startsWith("#tokens")) {
+      return Array.from(globalThis.canvas.scene.tokens.values());
+    } else if (val.startsWith("#tiles")) {
+      return Array.from(globalThis.canvas.scene.tiles.values());
+    } else if (val.startsWith("#id:")) {
+      return globalThis.Director.getPlaceables().find(t => t.id == val.slice(4) || t.name == val.slice(4));
+    } else if (val.startsWith("#token:")) {
+      val = globalThis.canvas.tokens.get(val.slice(7))
+      if (!val) {
+        throw new Error("Token is not specified")
+      }
+      return val;
+    } else if (type == "expression") {
+      const vars = {};
+      let code = `'use strict'; try {return ${val}} catch(e) {return false}`;
+      const f = new Function(...Object.keys(vars), code)
+      return f(...Object.values(vars));
+    } else if (type == "code") {
+      const AsyncFunction = Object.getPrototypeOf(async function() { }).constructor;
+      const vars = { "_tools": tools };
+      let code = `'use strict'; try {${val}} catch(e) {}`;
+      const f = new AsyncFunction(...Object.keys(vars), code)
+      return () => f(...Object.values(vars));
+    }
+  } else if (Array.isArray(val)) {
+    if (type == "effectSource" || type == "hookData") {
+      return val;
+    } else {
+      val = val.map(tag => {
+        return new RegExp("^" + tag.replace("{#}", "([1-9]+[0-9]*)") + "$")
+      })
+      val = globalThis.Tagger.getByTag(val);
+      if (type != "selection") {
+        if (val.length > 0) val = globalThis.Sequencer.Helpers.random_array_element(val);
+      }
+    }
+  }
+  return val;
 }

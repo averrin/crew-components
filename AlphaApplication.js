@@ -1,7 +1,8 @@
 import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
-import { logger, setting, capitalize, moduleId } from "./helpers.js";
+import { logger, setting, capitalize } from "./helpers.js";
 
-export default function CreateApplication(app_id, title, component, width = 800, height = 600, temp = false) {
+export default function CreateApplication(spec, props) {
+  const {moduleId, app_id, title, component, width = 800, height = 600, temp = false} = spec;
   const appName = capitalize(app_id);
   const show_setting = `show-${app_id}`;
   const isTemp = temp;
@@ -29,9 +30,7 @@ export default function CreateApplication(app_id, title, component, width = 800,
         svelte: {
           class: component,
           target: document.body,
-          props: function() {
-            return {};
-          },
+          props: {...spec, ...props},
         },
       });
     }

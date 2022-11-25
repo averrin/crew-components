@@ -78,8 +78,10 @@ fi
     npm i
   ;;
   local-crew)
+    rm -rf ./node_modules/crew-components/
     sed -i "s/averrin\/crew-components/..\/crew-components/" package.json
     sed -i "s/averrin\/svelte-grid/..\/svelte-grid/" package.json
+    npm i
   ;;
   git-crew)
     sed -i "s/\.\.\/crew-components/averrin\/crew-components/" package.json

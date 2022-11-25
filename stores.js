@@ -1,9 +1,9 @@
 import { writable, get } from 'svelte/store';
 import { setting, moduleId, logger } from './helpers.js'
 
-export function settingStore(key) {
-  const store = writable(setting(key))
-  const spec = game.settings.settings.get(`${moduleId}.${key}`);
+export function settingStore(store, key) {
+  store.set(setting(key))
+  const spec = game.settings.settings.get(`${get(moduleId)}.${key}`);
   spec.onChange = val => {
     store.set(val);
   }
@@ -15,9 +15,9 @@ export function settingStore(key) {
 }
 
 export function userFlagStore(key, defaultValue) {
-  const store = writable(game.user.getFlag(moduleId,key) ?? defaultValue)
+  const store = writable(game.user.getFlag(get(moduleId),key) ?? defaultValue)
   store.subscribe(v => {
-    game.user.setFlag(moduleId, key, v)
+    game.user.setFlag(get(moduleId), key, v)
   });
   return store;
 }
@@ -41,8 +41,8 @@ export let scale = writable(1.0);
 export let currentScene = writable(null);
 
 export function initStores() {
-  scale = settingStore("ui-scale");
-  theme = settingStore("theme");
+  scale = settingStore(scale, "ui-scale");
+  theme = settingStore(theme, "theme");
   logger.info(get(theme));
   if (!["dark", "light"].includes(get(theme))) {
     setting("theme", "light");

@@ -9,7 +9,7 @@
   import { get } from "svelte/store";
 
   import { rgb2hex } from "../helpers.js";
-  import Tags from "./Tags.svelte";
+  import Tags from "./TagsComponent.svelte";
   import { HsvPicker } from "svelte-color-picker";
   import { v4 as uuidv4 } from "uuid";
   import { tick } from "svelte";
