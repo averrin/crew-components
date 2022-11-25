@@ -12,8 +12,6 @@
   export let fullHeight = false;
   export let temp = false;
 
-  logger.error($moduleId, $theme, $uiScale);
-
   const { application } = getContext("external");
   // debugger;
   tick().then((_) => {
