@@ -4,18 +4,19 @@
   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
   import { getContext, onDestroy, tick } from "svelte";
   import { setting, moduleId } from "./helpers.js";
-  import {theme, scale as uiScale} from "./stores.js"
+  import { theme, scale as uiScale } from "./stores.js";
 
   export let elementRoot;
   export let id;
   export let extraClass = "";
   export let fullHeight = false;
-  export let temp = false;
+  export let isTemp = false;
+  export let trackSize = false;
 
   const { application } = getContext("external");
   // debugger;
   tick().then((_) => {
-    const element = document.getElementById("alpha-" + id)
+    const element = document.getElementById("alpha-" + id);
     if (element) {
       element.classList.add("alpha-ui");
       element.classList.add("alpha-" + id);
@@ -25,16 +26,23 @@
     }
   });
   const position = application.position;
-  const { left, top, scale } = position.stores;
-
+  const { left, top, scale, height, width } = position.stores;
 
   const key = "position-" + id;
+  const size_key = "size-" + id;
 
-  if (!temp) {
+  if (!isTemp) {
     tick().then((_) => {
       const pos = setting(key);
       left.set(pos.x);
       top.set(pos.y);
+      if (trackSize) {
+        const size = setting(size_key);
+        setTimeout((_) => {
+          height.set(size.height);
+          width.set(size.width);
+        }, 50);
+      }
     });
 
     onDestroy(
@@ -58,6 +66,25 @@
         });
       })
     );
+    if (trackSize) {
+      onDestroy(
+        width.subscribe((w) => {
+          if (!w) return;
+          tick().then((_) => {
+            const size = setting(size_key);
+            setting(size_key, { width: w, height: size.height });
+          });
+        }),
+
+        height.subscribe((h) => {
+          if (!h) return;
+          tick().then((_) => {
+            const size = setting(size_key);
+            setting(size_key, { width: size.width, height: h });
+          });
+        })
+      );
+    }
   }
 </script>
 

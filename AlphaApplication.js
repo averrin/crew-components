@@ -2,9 +2,19 @@ import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
 import { logger, setting, capitalize } from "./helpers.js";
 
 export default function CreateApplication(spec, props) {
-  const {moduleId, app_id, title, component, width = 800, height = 600, temp = false} = spec;
+  const {
+    moduleId,
+    app_id,
+    title,
+    component,
+    width = 800,
+    height = 600,
+    temp = false,
+    trackSize = false,
+  } = spec;
   const appName = capitalize(app_id);
   const show_setting = `show-${app_id}`;
+  const size_setting = `size-${app_id}`;
   const isTemp = temp;
   return class AlphaApplication extends SvelteApplication {
 
@@ -30,7 +40,7 @@ export default function CreateApplication(spec, props) {
         svelte: {
           class: component,
           target: document.body,
-          props: {...spec, ...props},
+          props: { ...spec, ...props },
         },
       });
     }
@@ -43,6 +53,16 @@ export default function CreateApplication(spec, props) {
           type: Boolean,
           default: false,
         });
+
+        if (trackSize) {
+          game.settings.register(moduleId, size_setting, {
+            scope: "client",
+            config: false,
+            type: Object,
+            default: { width, height },
+          });
+
+        }
 
         game.settings.register(moduleId, `position-${app_id}`, {
           scope: "client",
