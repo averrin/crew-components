@@ -163,7 +163,7 @@ export function setting(key, val) {
     // logger.info(`Reading ${mid}.${key} = ${JSON.stringify(val)}`);
     return val;
   } else {
-    logger.info(`Writing ${mid}.${key} = ${JSON.stringify(val)}`);
+    // logger.info(`Writing ${mid}.${key} = ${JSON.stringify(val)}`);
     game.settings.set(mid, key, val);
   }
 };

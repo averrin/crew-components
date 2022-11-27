@@ -16,7 +16,7 @@
   const { application } = getContext("external");
   // debugger;
   tick().then((_) => {
-    const element = document.getElementById("alpha-" + id);
+    const element = elementRoot ?? document.getElementById("alpha-" + id);
     if (element) {
       element.classList.add("alpha-ui");
       element.classList.add("alpha-" + id);
