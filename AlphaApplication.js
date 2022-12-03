@@ -7,6 +7,7 @@ export default function CreateApplication(spec, props) {
     app_id,
     title,
     component,
+    target,
     width = 800,
     height = 600,
     temp = false,
@@ -28,6 +29,7 @@ export default function CreateApplication(spec, props) {
     }
 
     static get defaultOptions() {
+      const targetElement = document.querySelector(target) ?? document.body;
       return foundry.utils.mergeObject(super.defaultOptions, {
         id: `alpha-${app_id}`,
         resizable: true,
@@ -39,7 +41,7 @@ export default function CreateApplication(spec, props) {
 
         svelte: {
           class: component,
-          target: document.body,
+          target: targetElement,
           props: { ...spec, ...props },
         },
       });

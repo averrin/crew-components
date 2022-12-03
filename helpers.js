@@ -4,7 +4,7 @@ import { sort } from 'fast-sort';
 import { compileExpression } from "filtrex";
 import { onDestroy } from "svelte";
 import Fuse from 'fuse.js'
-import {writable, get} from "svelte/store"
+import { writable, get } from "svelte/store"
 
 export let moduleId, infoColor, SETTINGS;
 moduleId = writable()
@@ -159,7 +159,11 @@ export function setModuleId(mid) {
 export function setting(key, val) {
   const mid = get(moduleId)
   if (val === undefined) {
-    val = game.settings.get(mid, key)
+    try {
+      val = game.settings.get(mid, key)
+    } catch (e) {
+      logger.error(`Failed settings reading ${mid}.${key}`)
+    }
     // logger.info(`Reading ${mid}.${key} = ${JSON.stringify(val)}`);
     return val;
   } else {

@@ -805,4 +805,8 @@
   .color-info-box {
     display: none !important;
   }
+
+  .inline .ui-btn {
+    border-radius: 0 !important;
+  }
 </style>
