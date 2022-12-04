@@ -67,7 +67,10 @@ export const argSpecs = [
     ], var_types: ["targets"]
   },
   {
-    id: "bool", var_types: ["bool", "expression"], default: false,
+    id: "bool", var_types: ["bool", "expression", "check"], default: false,
+  },
+  {
+    id: "check", var_types: ["bool", "check", "expression"], default: false,
   },
   // {
   //   id: "effect_file", var_types: ["effect_file", "expression"], options: (value) => {

@@ -590,6 +590,28 @@
         />
       {/if}
       <!-- <RemoveButton on:click={resetValue} type="primary" /> -->
+    {:else if type == "check"}
+      <div
+        class="ui-flex ui-flex-row ui-items-center toggle-holder"
+        style={!hideSign || label != ""
+          ? "border: 1px solid hsl(var(--b3)); padding: 0.5rem"
+          : ""}
+      >
+        <input
+          type="checkbox"
+          class="ui-checkbox ui-checkbox-accent"
+          bind:checked={value}
+          {disabled}
+        />
+      </div>
+
+      {#if resettable && defaultValue !== undefined && value !== defaultValue && !disabled}
+        <IconButton
+          icon="fluent:arrow-reset-20-filled"
+          on:click={resetValue}
+          type="primary"
+        />
+      {/if}
     {:else if type == "bool"}
       <div
         class="ui-flex ui-flex-row ui-items-center toggle-holder"
@@ -808,5 +830,12 @@
 
   .inline .ui-btn {
     border-radius: 0 !important;
+  }
+  .ui-checkbox:checked,
+  .ui-checkbox[checked="true"] {
+    background-image: linear-gradient(-45deg,transparent 65%,hsl(var(--chkbg)) 65.99%),linear-gradient(45deg,transparent 75%,hsl(var(--chkbg)) 75.99%),linear-gradient(-45deg,hsl(var(--chkbg)) 40%,transparent 40.99%),linear-gradient(45deg,hsl(var(--chkbg)) 30%,hsl(var(--chkfg)) 30.99%,hsl(var(--chkfg)) 40%,transparent 40.99%),linear-gradient(-45deg,hsl(var(--chkfg)) 50%,hsl(var(--chkbg)) 50.99%);
+  }
+  .ui-checkbox {
+    width: var(--control-height) !important;
   }
 </style>
