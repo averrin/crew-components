@@ -549,6 +549,9 @@ export function calculateValue(val, type) {
       if (ret.length == 0) {
         throw new Error("Nothing is selected.");
       }
+      if (type == "actor") {
+        ret = ret.map(t => t.actor)
+      }
       if (val.endsWith(".first")) {
         return ret[0];
       } else if (val.endsWith(".last")) {
@@ -559,9 +562,12 @@ export function calculateValue(val, type) {
         return ret;
       }
     } else if (val.startsWith("#target")) {
-      const ret = Array.from(globalThis.game.user.targets);
+      let ret = Array.from(globalThis.game.user.targets);
       if (ret.length == 0) {
         throw new Error("Nothing is targeted.");
+      }
+      if (type == "actor") {
+        ret = ret.map(t => t.actor)
       }
       if (val.endsWith(".first")) {
         return ret[0];
@@ -577,11 +583,21 @@ export function calculateValue(val, type) {
     } else if (val.startsWith("#tiles")) {
       return Array.from(globalThis.canvas.scene.tiles.values());
     } else if (val.startsWith("#id:")) {
+      if (type == "actor") {
+        return globalThis.game.actors.contents.find(a => a.id == val || a.name == val);
+      } else {
       return globalThis.Director.getPlaceables().find(t => t.id == val.slice(4) || t.name == val.slice(4));
+}
     } else if (val.startsWith("#token:")) {
       val = globalThis.canvas.tokens.get(val.slice(7))
       if (!val) {
         throw new Error("Token is not specified")
+      }
+      return val;
+    } else if (val.startsWith("#actor:")) {
+      val = globalThis.game.actors.get(val.slice(7))
+      if (!val) {
+        throw new Error("Actor is not specified")
       }
       return val;
     } else if (type == "expression") {

@@ -4,7 +4,14 @@ const tier2 = "ad0e8bd0-d5a3-46f8-9d9c-a8a2e97f4da3"
 const tier3 = "1692d62b-9224-4128-8690-66be6fb69d29"
 const keys = [special, tier1, tier2, tier3]
 
+const trialEnd = new Date(2023, 0)
+
+export function isTrial() {
+  return new Date() < trialEnd;
+}
+
 export function isPremium() {
+  if (isTrial()) return true;
   const m = game.modules.get("alpha-premium");
   if (m?.active && keys.includes(m.license)) {
     return true;

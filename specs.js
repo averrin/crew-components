@@ -42,6 +42,14 @@ export const argSpecs = [
     ], var_types: ["token", "expression"]
   },
   {
+    id: "actor", options: [
+      { value: "#controlled.first", label: "First Controlled" },
+      { value: "#target.first", label: "First Target" },
+      { value: "#id:", label: "Id or Name" },
+      { value: "#actor:", label: "Specific Actor" },
+    ], var_types: ["actor", "expression"]
+  },
+  {
     id: "tile", options: [
       { value: "#controlled.first", label: "First Controlled" },
       { value: "#controlled.last", label: "Last Controlled" },

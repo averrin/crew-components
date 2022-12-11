@@ -316,7 +316,12 @@
     );
     controlled.forEach((c) => c.control());
     if (tokens.length != 0) {
-      value = "#token:" + tokens[0].document.id;
+      let t = tokens[0].document;
+      if (type == "actor") {
+        value = `#${type}:` + t.actorId;
+      } else {
+        value = `#${type}:` + t.id;
+      }
       update();
     } else {
       ui.notifications.error("Token not found");
@@ -327,13 +332,12 @@
   //   // debugger;
   //   value = "#id:" + value.id;
   // }
-  setTimeout(_ => {
-
+  setTimeout((_) => {
     let tagArr = document.querySelectorAll(`[data-id="${id}"] input`);
     for (let i = 0; i < tagArr.length; i++) {
       tagArr[i].autocomplete = "off";
     }
-  }, 50)
+  }, 50);
 </script>
 
 {#if type == "color"}
@@ -478,7 +482,7 @@
           <iconify-icon icon="fa6-solid:magnifying-glass" />
         </button>
       </label>
-    {:else if type == "position" || type == "token" || type == "ease" || type == "targets" || type == "hook" || type == "placeable"}
+    {:else if type == "position" || type == "token" || type == "actor" || type == "ease" || type == "targets" || type == "hook" || type == "placeable"}
       {#if Array.isArray(value)}
         <div class:ui-w-full={selectFull}>
           <Tags
@@ -503,6 +507,21 @@
           class="ui-input"
           readonly={disabled}
         />
+        <RemoveButton on:click={resetValue} type="primary" />
+      {:else if value && typeof value === "string" && value.startsWith("#actor:")}
+        <div
+          class="ui-flex ui-flex-row ui-items-center ui-gap-2 ui-p-2"
+          style="border: 1px solid hsl(var(--b3))"
+        >
+          <img
+            class="ui-h-6 ui-w-6 ui-border-none"
+            src={game.actors.get(value.slice(7))?.img ??
+              "icons/svg/mystery-man.svg"}
+            alt=""
+          />
+          {game.actors.get(value.slice(7))?.name ?? "Unknown actor"}
+        </div>
+        <IconButton icon="mdi:target" title="Pick token" on:click={pickToken} />
         <RemoveButton on:click={resetValue} type="primary" />
       {:else if value && typeof value === "string" && value.startsWith("#token:")}
         <div
@@ -833,7 +852,21 @@
   }
   .ui-checkbox:checked,
   .ui-checkbox[checked="true"] {
-    background-image: linear-gradient(-45deg,transparent 65%,hsl(var(--chkbg)) 65.99%),linear-gradient(45deg,transparent 75%,hsl(var(--chkbg)) 75.99%),linear-gradient(-45deg,hsl(var(--chkbg)) 40%,transparent 40.99%),linear-gradient(45deg,hsl(var(--chkbg)) 30%,hsl(var(--chkfg)) 30.99%,hsl(var(--chkfg)) 40%,transparent 40.99%),linear-gradient(-45deg,hsl(var(--chkfg)) 50%,hsl(var(--chkbg)) 50.99%);
+    background-image: linear-gradient(
+        -45deg,
+        transparent 65%,
+        hsl(var(--chkbg)) 65.99%
+      ),
+      linear-gradient(45deg, transparent 75%, hsl(var(--chkbg)) 75.99%),
+      linear-gradient(-45deg, hsl(var(--chkbg)) 40%, transparent 40.99%),
+      linear-gradient(
+        45deg,
+        hsl(var(--chkbg)) 30%,
+        hsl(var(--chkfg)) 30.99%,
+        hsl(var(--chkfg)) 40%,
+        transparent 40.99%
+      ),
+      linear-gradient(-45deg, hsl(var(--chkfg)) 50%, hsl(var(--chkbg)) 50.99%);
   }
   .ui-checkbox {
     width: var(--control-height) !important;

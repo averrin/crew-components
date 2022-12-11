@@ -53,6 +53,7 @@
         if (!l) return;
         tick().then((_) => {
           const pos = setting(key);
+          if (!pos) return;
           pos.x = l;
           setting(key, { x: l, y: pos.y });
         });
@@ -61,6 +62,7 @@
         if (!t) return;
         tick().then((_) => {
           const pos = setting(key);
+          if (!pos) return;
           pos.y = t;
           setting(key, { y: t, x: pos.x });
         });
@@ -72,7 +74,7 @@
           if (!w) return;
           tick().then((_) => {
             const size = setting(size_key);
-            setting(size_key, { width: w, height: size.height });
+            setting(size_key, { width: w, height: size?.height });
           });
         }),
 
@@ -80,7 +82,7 @@
           if (!h) return;
           tick().then((_) => {
             const size = setting(size_key);
-            setting(size_key, { width: size.width, height: h });
+            setting(size_key, { width: size?.width, height: h });
           });
         })
       );
