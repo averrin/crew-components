@@ -12,6 +12,7 @@
   export let fullHeight = false;
   export let isTemp = false;
   export let trackSize = false;
+  export let scrollable = false;
 
   const { application } = getContext("external");
   // debugger;
@@ -94,6 +95,7 @@
   <main
     class={`alpha-ui ui-flex ui-flex-col ui-container ui-text-base-content ${extraClass}`}
     style:height={fullHeight ? "100%" : "unset"}
+    class:ui-overflow-auto={scrollable}
     data-theme={$theme}
   >
     <slot />

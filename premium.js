@@ -12,6 +12,10 @@ export function isTrial() {
 
 export function isPremium() {
   if (isTrial()) return true;
+  return isPremiumClean()
+}
+
+export function isPremiumClean() {
   const m = game.modules.get("alpha-premium");
   if (m?.active && keys.includes(m.license)) {
     return true;
