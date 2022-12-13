@@ -522,8 +522,14 @@ export function showFile(file) {
 }
 
 export function onHook(hook, f) {
-  const id = Hooks.on(hook, f);
-  onDestroy(_ => Hooks.off(hook, id));
+  if (!Array.isArray(hook)) {
+    hook = [hook];
+  }
+  for (const h of hook) {
+    // logger.info("Registrating on hook", h, f)
+    const id = Hooks.on(h, f);
+    onDestroy(_ => Hooks.off(h, id));
+  }
 }
 
 export function formatBytes(bytes, decimals = 2) {
@@ -586,8 +592,8 @@ export function calculateValue(val, type) {
       if (type == "actor") {
         return globalThis.game.actors.contents.find(a => a.id == val || a.name == val);
       } else {
-      return globalThis.Director.getPlaceables().find(t => t.id == val.slice(4) || t.name == val.slice(4));
-}
+        return globalThis.Director.getPlaceables().find(t => t.id == val.slice(4) || t.name == val.slice(4));
+      }
     } else if (val.startsWith("#token:")) {
       val = globalThis.canvas.tokens.get(val.slice(7))
       if (!val) {

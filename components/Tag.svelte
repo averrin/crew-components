@@ -103,6 +103,10 @@
     height: unset !important;
     align-items: center;
   }
+   .tag:hover {
+    opacity: 0.6;
+    color: 1px solid;
+  }
 
   .tag.compact {
     font-size: 0.8rem;
