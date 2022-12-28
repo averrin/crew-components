@@ -103,6 +103,7 @@ export const argSpecs = [
   //   }
   // },
   { id: "sound_file", var_types: ["sound_file", "expression"] },
+  { id: "image_file", var_types: ["image_file", "expression"] },
   { id: "int", var_types: ["int", "expression"], default: 0 },
   { id: "float", var_types: ["float", "int", "expression"], default: 0 },
   { id: "macro", var_types: ["macro", "string", "expression"] },

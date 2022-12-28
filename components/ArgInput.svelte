@@ -4,18 +4,18 @@
   import RemoveButton from "./RemoveButton.svelte";
   import IconButton from "./IconButton.svelte";
   import Icon from "./Icon.svelte";
+  import CreateApplication from "../AlphaApplication.js"
 
   import { argSpecs } from "../specs.js";
   import { get } from "svelte/store";
 
-  import { rgb2hex } from "../helpers.js";
   import Tags from "./TagsComponent.svelte";
-  import { HsvPicker } from "svelte-color-picker";
   import { v4 as uuidv4 } from "uuid";
-  import { tick } from "svelte";
+  import { writable } from "svelte/store";
   import { getContext } from "svelte";
 
   import { createEventDispatcher } from "svelte";
+  import ColorPicker from "./ColorPicker.svelte";
   const dispatch = createEventDispatcher();
 
   let mode = "direct";
@@ -158,10 +158,6 @@
     update();
   }
 
-  function colorChange(e) {
-    value = rgb2hex(e.detail).hex.slice(0, 7);
-  }
-
   let options = additionalItems;
   async function populateOptions() {
     spec = spec || argSpecs.find((s) => s.id == type);
@@ -257,29 +253,6 @@
     value = { x: Number.parseFloat(value.x), y: Number.parseFloat(value.y) };
   }
 
-  let colorOpen = false;
-
-  function fixCP() {
-    tick().then((_) => {
-      document
-        .querySelectorAll(".ui-modal-box .alpha-selector")
-        .forEach((e) => (e.style.display = "none"));
-      document
-        .querySelectorAll(".ui-modal-box .color-info-box")
-        .forEach((e) => (e.style.display = "none"));
-      document
-        .querySelectorAll(".ui-modal-box .main-container")
-        .forEach((e) => (e.style.height = "unset"));
-    });
-  }
-  fixCP();
-  $: {
-    if (type == "color" && value && typeof value !== "string") {
-      value = "#" + value.toString(16);
-    }
-    fixCP();
-  }
-
   async function pickPosition() {
     const controlled = [
       canvas.tiles.controlled,
@@ -338,33 +311,38 @@
       tagArr[i].autocomplete = "off";
     }
   }, 50);
-</script>
 
-{#if type == "color"}
-  <input
-    type="checkbox"
-    id="color-modal-{id}"
-    class="ui-modal-toggle"
-    on:click={(_) => (colorOpen = !colorOpen)}
-  />
-  <label
-    for="color-modal-{id}"
-    class="ui-modal ui-items-center"
-    class:modal-open={colorOpen}
-    style="pointer-events: all !important;"
-  >
-    <label
-      class="ui-modal-box ui-relative ui-w-fit ui-flex ui-items-center ui-justify-center ui-flex-col"
-      for=""
-    >
-      <HsvPicker
-        on:colorChange={colorChange}
-        startColor={value?.slice(0, 7) || "#46525D"}
-      />
-      <!-- <input type="text" class="ui-input" bind:value /> -->
-    </label>
-  </label>
-{/if}
+  function openColorPicker() {
+    const spec = {
+      moduleId: "alpha-suit",
+      app_id: "color-picker",
+      title: "Alpha Color Picker",
+      component: ColorPicker,
+      height: 278,
+      width: 240,
+      temp: true,
+    };
+    const store = writable(value);
+    store.subscribe(v => {
+      value = v;
+      update();
+    })
+    const props = { value: store };
+    const appClass = CreateApplication(spec, props);
+    const app = new appClass();
+    app.start();
+    app.show();
+  }
+  function imageDrop(event) {
+
+    const data = TextEditor.getDragEventData(event);
+    if (data.type != "Tile") return;
+
+    let file = data.texture.src;
+    value = file;
+    update();
+  }
+</script>
 
 <label
   class="arg-input ui-input-group ui-min-w-fit ui-justify-{justify} ui-input-group-{size}"
@@ -471,7 +449,23 @@
         </button>
       </label>
     {:else if type == "sound_file"}
-      <label class="ui-input-group">
+      <label class="ui-input-group"
+          on:drop={imageDrop}
+      >
+        <input
+          type="text"
+          value={value && value.split("/")[value.split("/").length - 1]}
+          on:change={(e) => (value = e.detail)}
+          class="ui-input"
+        />
+        <button class="ui-btn ui-btn-square" on:click={selectFile}>
+          <iconify-icon icon="fa6-solid:magnifying-glass" />
+        </button>
+      </label>
+    {:else if type == "image_file"}
+      <label class="ui-input-group"
+          on:drop={imageDrop}
+      >
         <input
           type="text"
           value={value && value.split("/")[value.split("/").length - 1]}
@@ -675,7 +669,7 @@
       <div
         class="ui-btn ui-btn-square"
         style:background-color={value}
-        on:click={(_) => (colorOpen = !colorOpen)}
+        on:click={openColorPicker}
       />
       {#if !compact}
         <input type="text" bind:value class="ui-input" />

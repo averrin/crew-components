@@ -9,6 +9,8 @@
   export let loading;
 
   import { createEventDispatcher } from "svelte";
+  import Icon from "./Icon.svelte";
+
   const dispatch = createEventDispatcher();
   function click(e) {
     if (!disabled && !loading) {
@@ -24,7 +26,7 @@
   {style}
   on:click={(e) => click(e)}
 >
-  <iconify-icon icon={loading ? "line-md:loading-twotone-loop" : icon} />
+  <Icon icon={loading ? "line-md:loading-twotone-loop" : icon} />
 </button>
 
 <style>
